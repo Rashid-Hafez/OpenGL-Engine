@@ -7,4 +7,4 @@ As you can see from the GIF, I can load in multiple models. I created a function
 
 There are actually 2 light sources, the animated light is a point light which uses diffuse lighting. And another light which is a replica of the sun which uses directional light and creates a subtle yet strong ambient light.
 
-![Engine Demo](https://media.giphy.com/media/BzjKrt5cggW9w1s0Tt/giphy.gif)
+![EngineDemo](https://media.giphy.com/media/BzjKrt5cggW9w1s0Tt/giphy.gif)
