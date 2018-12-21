@@ -1,0 +1,14 @@
+newmtl Material #263
+Ns 1
+Ka 0 0 0
+Kd 1 1 1
+Ks 1 1 1
+map_Kd terra0.png
+d 1
+newmtl Material #264
+Ns 1
+Ka 0 0 0
+Kd 1 1 1
+Ks 1 1 1
+map_Kd terra1.png
+d 1

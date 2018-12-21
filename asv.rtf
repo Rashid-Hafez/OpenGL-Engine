@@ -1,0 +1,4017 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1561\cocoasubrtf600
+{\fonttbl\f0\fnil\fcharset0 Menlo-Regular;\f1\fswiss\fcharset0 Helvetica;\f2\froman\fcharset0 TimesNewRomanPSMT;
+}
+{\colortbl;\red255\green255\blue255;\red65\green182\blue69;\red25\green25\blue25;\red198\green124\blue72;
+\red219\green44\blue56;\red215\green255\blue236;\red251\green2\blue128;\red255\green255\blue255;\red131\green192\blue87;
+\red120\green109\blue196;\red0\green160\blue190;\red65\green85\blue209;}
+{\*\expandedcolortbl;;\csgenericrgb\c25500\c71400\c27000;\cssrgb\c12984\c12985\c12984;\csgenericrgb\c77800\c48800\c28400;
+\csgenericrgb\c85900\c17100\c21900;\cssrgb\c86810\c100000\c94085;\cssrgb\c100000\c18574\c57340;\csgenericrgb\c100000\c100000\c100000;\csgenericrgb\c51200\c75400\c34300;
+\csgenericrgb\c46900\c42600\c77000;\csgenericrgb\c0\c62600\c74600;\csgenericrgb\c25500\c33300\c81900;}
+\margl1440\margr1440\vieww17420\viewh15340\viewkind0
+\deftab593
+\pard\tx593\pardeftab593\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf2 \cb3 //
+\f1 \cf0 \
+
+\f0 \cf2 //  main.cpp
+\f1 \cf0 \
+
+\f0 \cf2 //  OpenGL trial
+\f1 \cf0 \
+
+\f0 \cf2 //
+\f1 \cf0 \
+
+\f0 \cf2 //  Created by Rashid on 9/28/18.
+\f1 \cf0 \
+
+\f0 \cf2 //  Copyright \'a9 2018 Rashid. All rights reserved.
+\f1 \cf0 \
+
+\f0 \cf2 //
+\f1 \cf0 \
+
+\f0 \cf2 //  Multiple Obj
+\f1 \cf0 \
+
+\f0 \cf2 //  glm::mat4 model;
+\f1 \cf0 \
+
+\f0 \cf2 //  model = glm::translate(model, position);
+\f1 \cf0 \
+
+\f0 \cf2 //  float angle = 20.0f * i;
+\f1 \cf0 \
+
+\f0 \cf2 //  model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
+\f1 \cf0 \
+
+\f0 \cf2 //  ourShader.setMat4("model", model);
+\f1 \cf0 \
+
+\f0 \cf2 //  glDrawArrays(GL_TRIANGLES, 0, 36);
+\f1 \cf0 \
+
+\f0 \cf2 //
+\f1 \cf0 \
+
+\f0 \cf2 //
+\f1 \cf0 \
+
+\f0 \cf4 #include \cf5 <iostream>
+\f1 \cf0 \
+
+\f0 \cf4 #include \cf5 <fstream>
+\f1 \cf0 \
+
+\f0 \cf4 #include \cf5 <sstream>
+\f1 \cf0 \
+
+\f0 \cf4 #include \cf5 <vector>
+\f1 \cf0 \
+
+\f0 \cf4 #include \cf5 <iostream>
+\f1 \cf0 \
+
+\f0 \cf4 #include \cf5 <GL/glew.h>
+\f1 \cf0 \
+
+\f0 \cf4 #include \cf5 <GLFW/glfw3.h>
+\f1 \cf0 \
+
+\f0 \cf4 #include \cf5 <glm.hpp>
+\f1 \cf0 \
+
+\f0 \cf4 #include \cf5 <gtx/transform.hpp>
+\f1 \cf0 \
+
+\f0 \cf4 #include \cf5 "Model.hpp"
+\f1 \cf0 \
+
+\f0 \cf4 #include \cf5 "Shader.hpp"
+\f1 \cf0 \
+
+\f0 \cf4 #include \cf5 "mesh.hpp"
+\f1 \cf0 \
+
+\f0 \cf4 #include \cf5 "Camera.hpp"
+\f1 \cf0 \
+
+\f0 \cf4 #include \cf5 "Skybox.hpp"
+\f1 \cf0 \
+
+\f2 \cf6 //////////////////////METHODS//////////////////////////////////////////
+\f1 \cf0 \
+
+\f0 \cf7 void\cf8  hints();
+\f1 \cf0 \
+
+\f0 \cf7 int\cf8  windowInit();
+\f1 \cf0 \
+
+\f0 \cf7 void\cf8  setupRender();
+\f1 \cf0 \
+
+\f0 \cf2 //void LoadCamera(GLuint programID);//Depreciated
+\f1 \cf0 \
+
+\f0 \cf7 void\cf8  setCamera(\cf9 GLuint\cf8  programID, \cf9 glm\cf8 ::\cf9 vec3\cf8  translation, \cf7 float\cf8  angle, \cf7 bool\cf8  trans);
+\f1 \cf0 \
+
+\f0 \cf7 void\cf8  processInput(\cf9 GLFWwindow\cf8  *window);
+\f1 \cf0 \
+
+\f2 \cf6 //////////////////////VARIABLES//////////////////////////////////////////
+\f1 \cf0 \
+
+\f0 \cf9 GLFWwindow\cf8 * window;
+\f1 \cf0 \
+
+\f0 \cf7 int\cf8  width = \cf10 1200\cf8 ;
+\f1 \cf0 \
+
+\f0 \cf7 int\cf8  height = \cf10 800\cf8 ;
+\f1 \cf0 \
+
+\f0 \cf9 glm\cf8 ::\cf9 mat4\cf8  mvp;
+\f1 \cf0 \
+
+\f0 \cf9 glm\cf8 ::\cf9 mat4\cf8  ModelMatrix;
+\f1 \cf0 \
+
+\f0 \cf9 glm\cf8 ::\cf9 mat4\cf8  View;
+\f1 \cf0 \
+
+\f0 \cf9 glm\cf8 ::\cf9 mat4\cf8  Projection;
+\f1 \cf0 \
+
+\f0 \cf7 double\cf8  currentTime;
+\f1 \cf0 \
+
+\f0 \cf7 float\cf8  deltaTime;
+\f1 \cf0 \
+\
+
+\f2 \cf6 /////////////////////////// LIGHT ////////////////////////////////////////////////
+\f1 \cf0 \
+
+\f2 \cf6 /** THE FOLLOWING VARIABLES ONLY DEFINE THE WORLD DIRECTIONAL LIGHT, THIS IS AN IMITATION OF THE SUN.  **/
+\f1 \cf0 \
+
+\f0 \cf9 glm\cf8 ::\cf9 vec3\cf8        ia = \cf9 glm\cf8 ::\cf9 vec3\cf8 (\cf10 0.5\cf8 , \cf10 0.5\cf8 , \cf10 0.5\cf8 ); \cf2 //aimbient color
+\f1 \cf0 \
+
+\f0 \cf9 GLfloat\cf8          ka = \cf10 0.3\cf8 ;
+\f1 \cf0 \
+
+\f0 \cf9 glm\cf8 ::\cf9 vec3\cf8        id = \cf9 glm\cf8 ::\cf9 vec3\cf8 (\cf10 1.0\cf8 , \cf10 1.0\cf8 , \cf10 1.0\cf8 ); \cf2 //diff color
+\f1 \cf0 \
+
+\f0 \cf9 GLfloat\cf8          kd = \cf10 0.5\cf8 ;
+\f1 \cf0 \
+
+\f0 \cf9 glm\cf8 ::\cf9 vec3\cf8        is = \cf9 glm\cf8 ::\cf9 vec3\cf8 (\cf10 1.00f\cf8 , \cf10 1.00f\cf8 , \cf10 1.0f\cf8 );
+\f1 \cf0 \
+
+\f0 \cf9 GLfloat\cf8          ks = \cf10 0.3\cf8 ;
+\f1 \cf0 \
+
+\f0 \cf9 GLfloat\cf8          shininess = \cf10 32.0f\cf8 ;
+\f1 \cf0 \
+
+\f0 \cf2 //glm::vec3 strD(0.1f); //Strength of the light diffuse Must convert to VEC4 when assigning as uniform att in shader
+\f1 \cf0 \
+
+\f0 \cf2 //glm::vec3 strS(100.0f); //Strength of the light specular Must convert to VEC4 when assigning as uniform att in shader
+\f1 \cf0 \
+
+\f0 \cf9 glm\cf8 ::\cf9 vec3\cf8  lightPos;\cf2 //DEFAULT STATIC GLOBAL LIGHT POSITION TRANSFORMATION VECTOR VARIABLE TO CATCH IN SHADER
+\f1 \cf0 \
+
+\f0 \cf9 glm\cf8 ::\cf9 vec3\cf8  pLightPos = \cf9 glm\cf8 ::\cf9 vec3\cf8 (\cf10 10.0f\cf8 ,\cf10 20.0f\cf8 ,\cf10 10.0f\cf8 ); \cf2 //Light position for point light
+\f1 \cf0 \
+
+\f0 \cf9 glm\cf8 ::\cf9 vec3\cf8  pLightColour = \cf9 glm\cf8 ::\cf9 vec3\cf8 (\cf10 10.0f\cf8 , \cf10 10.0f\cf8 , \cf10 10.0f\cf8 ); \cf2 //diff color
+\f1 \cf0 \
+
+\f2 \cf6 /////////////////////////// LIGHT ////////////////////////////////////////////////
+\f1 \cf0 \
+\
+
+\f2 \cf6 /////////////////////////// CAMERA ////////////////////////////////////////////////
+\f1 \cf0 \
+
+\f0 \cf9 Camera\cf8  camera(\cf9 glm\cf8 ::\cf9 vec3\cf8 (\cf10 0.0f\cf8 , \cf10 0.0f\cf8 , \cf10 3.0f\cf8 ));
+\f1 \cf0 \
+
+\f0 \cf7 float\cf8  lastX = \cf9 width\cf8  / \cf10 2.0f\cf8 ;
+\f1 \cf0 \
+
+\f0 \cf7 float\cf8  lastY = \cf9 height\cf8  / \cf10 2.0f\cf8 ;
+\f1 \cf0 \
+
+\f0 \cf7 bool\cf8  firstMouse = \cf7 true\cf8 ;
+\f1 \cf0 \
+
+\f0 \cf2 //methods:
+\f1 \cf0 \
+
+\f0 \cf7 void\cf8  framebuffer_size_callback(\cf9 GLFWwindow\cf8 * window, \cf7 int\cf8  width, \cf7 int\cf8  height);
+\f1 \cf0 \
+
+\f0 \cf7 void\cf8  mouse_callback(\cf9 GLFWwindow\cf8 * window, \cf7 double\cf8  xpos, \cf7 double\cf8  ypos);
+\f1 \cf0 \
+
+\f0 \cf7 void\cf8  scroll_callback(\cf9 GLFWwindow\cf8 * window, \cf7 double\cf8  xoffset, \cf7 double\cf8  yoffset);
+\f1 \cf0 \
+
+\f0 \cf7 void\cf8  processInput(\cf9 GLFWwindow\cf8  *window);
+\f1 \cf0 \
+
+\f2 \cf6 /////////////////////////// CAMERA ////////////////////////////////////////////////
+\f1 \cf0 \
+\
+
+\f0 \cf7 int\cf8  main() \{
+\f1 \cf0 \
+
+\f0 \cf8     \cf9 glewExperimental\cf8  = \cf7 true\cf8 ; \cf2 // Needed for core profile
+\f1 \cf0 \
+
+\f0 \cf8     \cf7 if\cf8 ( !\cf9 glfwInit\cf8 () )
+\f1 \cf0 \
+
+\f0 \cf8     \{
+\f1 \cf0 \
+
+\f0 \cf8         \cf11 fprintf\cf8 ( \cf4 stderr\cf8 , \cf5 "Failed to initialize GLFW\\n"\cf8  );
+\f1 \cf0 \
+
+\f0 \cf8         \cf7 return\cf8  -\cf10 1\cf8 ;
+\f1 \cf0 \
+
+\f0 \cf8     \}
+\f1 \cf0 \
+
+\f0 \cf8     
+\f1 \cf0 \
+
+\f0 \cf8     \cf9 hints\cf8 ();
+\f1 \cf0 \
+
+\f0 \cf8     \cf7 if\cf8 (\cf9 windowInit\cf8 ()==-\cf10 1\cf8 )\{
+\f1 \cf0 \
+
+\f0 \cf8         \cf11 std\cf8 ::\cf11 cout\cf8 <<\cf5 "Woah, error!"\cf8 ;
+\f1 \cf0 \
+
+\f0 \cf8     \} \cf2 //opening wwindow
+\f1 \cf0 \
+
+\f0 \cf8     
+\f1 \cf0 \
+
+\f0 \cf8     \cf2 //Mouse callbacks and moving the screen
+\f1 \cf0 \
+
+\f0 \cf8     \cf9 glfwSetFramebufferSizeCallback\cf8 (\cf9 window\cf8 , \cf9 framebuffer_size_callback\cf8 );
+\f1 \cf0 \
+
+\f0 \cf8     \cf9 glfwSetCursorPosCallback\cf8 (\cf9 window\cf8 , \cf9 mouse_callback\cf8 );
+\f1 \cf0 \
+
+\f0 \cf8     \cf9 glfwSetScrollCallback\cf8 (\cf9 window\cf8 , \cf9 scroll_callback\cf8 );
+\f1 \cf0 \
+
+\f0 \cf8     
+\f1 \cf0 \
+
+\f0 \cf8     \cf2 // tell GLFW to capture our mouse
+\f1 \cf0 \
+
+\f0 \cf8     \cf9 glfwSetInputMode\cf8 (\cf9 window\cf8 , \cf4 GLFW_CURSOR\cf8 , \cf4 GLFW_CURSOR_DISABLED\cf8 );
+\f1 \cf0 \
+
+\f0 \cf8     
+\f1 \cf0 \
+
+\f0 \cf8     \cf9 glfwSetInputMode\cf8 (\cf9 window\cf8 , \cf4 GLFW_STICKY_KEYS\cf8 , \cf4 GL_TRUE\cf8 );
+\f1 \cf0 \
+
+\f0 \cf8     
+\f1 \cf0 \
+
+\f0 \cf8     \cf11 std\cf8 ::\cf11 cout\cf8 <<\cf5 "Loading Shader"\cf8 <<\cf11 std\cf8 ::\cf11 endl\cf8 ;
+\f1 \cf0 \
+
+\f0 \cf8     
+\f1 \cf0 \
+
+\f0 \cf2 //SHADER VARIABLE
+\f1 \cf0 \
+
+\f0 \cf9 Shader\cf8  shader(\cf5 "/Users/rashid/Desktop/rash/1WORKSPACE/Uni/Graphics/OpenGL trial/OpenGL trial/Shades"\cf8 ); \cf2 //Path for BOTH shaders
+\f1 \cf0 \
+
+\f0 \cf9 Shader\cf8  lightShader(\cf5 "/Users/rashid/Desktop/rash/1WORKSPACE/Uni/Graphics/OpenGL trial/OpenGL trial/LightSource"\cf8 ); \cf2 //shader for lightsource
+\f1 \cf0 \
+
+\f0 \cf9 Shader\cf8  skyboxShader(\cf5 "/Users/rashid/Desktop/rash/1WORKSPACE/Uni/Graphics/OpenGL trial/OpenGL trial/skyShader"\cf8 );
+\f1 \cf0 \
+\
+
+\f0 \cf8     \cf2 //environemnt//skybox
+\f1 \cf0 \
+
+\f0 \cf8     \cf9 Skybox\cf8 * world;
+\f1 \cf0 \
+
+\f0 \cf8     world = \cf7 new\cf8  \cf9 Skybox\cf8 ();
+\f1 \cf0 \
+
+\f0 \cf8     
+\f1 \cf0 \
+
+\f0 \cf2 //Model. SETUP BUFFER FIRST
+\f1 \cf0 \
+
+\f0 \cf2 // Model model1("/Users/rashid/Desktop/rash/1WORKSPACE/Uni/Graphics/Res/modelA_Port.obj");
+\f1 \cf0 \
+
+\f0 \cf8     \cf9 Model\cf8  model2(\cf5 "/Users/rashid/Desktop/rash/1WORKSPACE/Uni/Graphics/OpenGL trial/nanosuit/nanosuit.obj"\cf8 );
+\f1 \cf0 \
+
+\f0 \cf8     \cf9 Model\cf8  cloth(\cf5 "/Users/rashid/Desktop/rash/1UNIVERSITY/Graphics/Model/tryPort.obj"\cf8 );
+\f1 \cf0 \
+
+\f0 \cf8     \cf9 Model\cf8  light(\cf5 "/Users/rashid/Desktop/rash/1WORKSPACE/Uni/Graphics/Res/cube.obj"\cf8 );
+\f1 \cf0 \
+
+\f0 \cf8     \cf9 Model\cf8  lightP(\cf5 "/Users/rashid/Desktop/rash/1WORKSPACE/Uni/Graphics/Res/cube.obj"\cf8 );
+\f1 \cf0 \
+
+\f0 \cf8     
+\f1 \cf0 \
+
+\f0 \cf8     
+\f1 \cf0 \
+
+\f0 \cf8     \cf9 glEnable\cf8 (\cf4 GL_STENCIL_TEST\cf8 );
+\f1 \cf0 \
+
+\f0 \cf8     \cf9 glEnable\cf8 (\cf4 GL_BLEND\cf8 );
+\f1 \cf0 \
+
+\f0 \cf8     \cf9 glBlendFunc\cf8 (\cf4 GL_SRC_ALPHA\cf8 , \cf4 GL_ONE_MINUS_SRC_ALPHA\cf8 );
+\f1 \cf0 \
+
+\f0 \cf8     \cf4 glBlendFuncSeparate\cf8 (\cf4 GL_SRC_ALPHA\cf8 , \cf4 GL_ONE_MINUS_SRC_ALPHA\cf8 , \cf4 GL_ONE\cf8 , \cf4 GL_ZERO\cf8 );
+\f1 \cf0 \
+
+\f0 \cf8     
+\f1 \cf0 \
+
+\f0 \cf8     \cf9 glm\cf8 ::\cf9 vec3\cf8  translate = \cf9 glm\cf8 ::\cf9 vec3\cf8 (\cf10 1.0\cf8 ,\cf10 1.0\cf8 ,\cf10 1.0\cf8 );
+\f1 \cf0 \
+
+\f0 \cf8     \cf7 float\cf8  angle = \cf10 0.1\cf8 ;
+\f1 \cf0 \
+
+\f0 \cf8     
+\f1 \cf0 \
+
+\f2 \cf6 ////////////////////////////////////    MAIN LOOP START   ///////////////////////////////////////////////////////////////
+\f1 \cf0 \
+
+\f0 \cf8     \cf7 while\cf8 ( \cf9 glfwGetKey\cf8 (\cf9 window\cf8 , \cf4 GLFW_KEY_ESCAPE\cf8  )
+\f1 \cf0 \
+
+\f0 \cf8           !=
+\f1 \cf0 \
+
+\f0 \cf8           \cf4 GLFW_PRESS\cf8  && \cf9 glfwWindowShouldClose\cf8 (\cf9 window\cf8 )
+\f1 \cf0 \
+
+\f0 \cf8           ==
+\f1 \cf0 \
+
+\f0 \cf8           \cf10 0\cf8  )\{\cf2 // Check if the ESC key was pressed or the window was closed
+\f1 \cf0 \
+
+\f0 \cf8         
+\f1 \cf0 \
+
+\f0 \cf8         \cf9 deltaTime\cf8  = \cf9 glfwGetTime\cf8 ();\cf2 //gets the current milisecond float
+\f1 \cf0 \
+
+\f0 \cf8         
+\f1 \cf0 \
+
+\f0 \cf8         \cf9 processInput\cf8 (\cf9 window\cf8 );
+\f1 \cf0 \
+
+\f0 \cf8         
+\f1 \cf0 \
+
+\f0 \cf8         \cf9 glEnable\cf8 (\cf4 GL_DEPTH_TEST\cf8 );
+\f1 \cf0 \
+
+\f0 \cf8         \cf9 glClear\cf8 ( \cf4 GL_COLOR_BUFFER_BIT\cf8  );
+\f1 \cf0 \
+
+\f0 \cf8         \cf9 glClear\cf8 (\cf4 GL_COLOR_BUFFER_BIT\cf8  | \cf4 GL_DEPTH_BUFFER_BIT\cf8 );\cf2 //clear first
+\f1 \cf0 \
+
+\f0 \cf8         
+\f1 \cf0 \
+
+\f0 \cf8         
+\f1 \cf0 \
+
+\f2 \cf6 ////////////////////NORMAL OBJECTS//////////////////////////// START
+\f1 \cf0 \
+
+\f0 \cf8         shader.\cf9 Bind\cf8 (); \cf2 //glUseProgram(shaderID)
+\f1 \cf0 \
+
+\f0 \cf8         \cf4 glUniform3f\cf8 (\cf4 glGetUniformLocation\cf8 (shader.\cf9 ID\cf8 , \cf5 "material.ia"\cf8 ), \cf9 ia\cf8 .r, \cf9 ia\cf8 .g, \cf9 ia\cf8 .b);
+\f1 \cf0 \
+
+\f0 \cf8         \cf4 glUniform1f\cf8 (\cf4 glGetUniformLocation\cf8 (shader.\cf9 ID\cf8 , \cf5 "sun.ka"\cf8 ), \cf9 ka\cf8 );
+\f1 \cf0 \
+
+\f0 \cf8         \cf4 glUniform3f\cf8 (\cf4 glGetUniformLocation\cf8 (shader.\cf9 ID\cf8 , \cf5 "material.id"\cf8 ), \cf9 id\cf8 .r,\cf9 id\cf8 .g,\cf9 id\cf8 .b); \cf2 //diffuse colour, send to shader as id. aka lightcolour
+\f1 \cf0 \
+
+\f0 \cf8         \cf4 glUniform1f\cf8 (\cf4 glGetUniformLocation\cf8 (shader.\cf9 ID\cf8 , \cf5 "sun.kd"\cf8 ), \cf9 kd\cf8 );
+\f1 \cf0 \
+
+\f0 \cf8         \cf4 glUniform3f\cf8 (\cf4 glGetUniformLocation\cf8 (shader.\cf9 ID\cf8 , \cf5 "material.is"\cf8 ), \cf9 is\cf8 .r, \cf9 is\cf8 .g, \cf9 is\cf8 .b);
+\f1 \cf0 \
+
+\f0 \cf8         \cf4 glUniform1f\cf8 (\cf4 glGetUniformLocation\cf8 (shader.\cf9 ID\cf8 , \cf5 "sun.ks"\cf8 ), \cf9 ks\cf8 );
+\f1 \cf0 \
+
+\f0 \cf8         \cf4 glUniform1f\cf8 (\cf4 glGetUniformLocation\cf8 (shader.\cf9 ID\cf8 , \cf5 "material.shininess"\cf8 ), \cf9 shininess\cf8 );
+\f1 \cf0 \
+
+\f0 \cf8         
+\f1 \cf0 \
+
+\f0 \cf8         \cf2 //pointlight
+\f1 \cf0 \
+
+\f0 \cf8         \cf4 glUniform3f\cf8 (\cf4 glGetUniformLocation\cf8 (shader.\cf9 ID\cf8 , \cf5 "pLight.is"\cf8 ), \cf10 1.0f\cf8 ,\cf10 1.0f\cf8 ,\cf10 1.0f\cf8 );
+\f1 \cf0 \
+
+\f0 \cf8         \cf4 glUniform3f\cf8 (\cf4 glGetUniformLocation\cf8 (shader.\cf9 ID\cf8 , \cf5 "pLight.id"\cf8 ), \cf9 pLightColour\cf8 .r,\cf9 pLightColour\cf8 .g,\cf9 pLightColour\cf8 .b);
+\f1 \cf0 \
+
+\f0 \cf8         \cf4 glUniform3f\cf8 (\cf4 glGetUniformLocation\cf8 (shader.\cf9 ID\cf8 , \cf5 "pLight.ia"\cf8 ), \cf10 0.05f\cf8 ,\cf10 0.05f\cf8 ,\cf10 0.05f\cf8 );
+\f1 \cf0 \
+
+\f0 \cf8         \cf4 glUniform1f\cf8 (\cf4 glGetUniformLocation\cf8 (shader.\cf9 ID\cf8 , \cf5 "pLight.constant"\cf8 ), \cf10 1.0f\cf8 );
+\f1 \cf0 \
+
+\f0 \cf8         \cf4 glUniform1f\cf8 (\cf4 glGetUniformLocation\cf8 (shader.\cf9 ID\cf8 , \cf5 "pLight.quadratic"\cf8 ), \cf10 0.09f\cf8 );
+\f1 \cf0 \
+
+\f0 \cf8         \cf4 glUniform1f\cf8 (\cf4 glGetUniformLocation\cf8 (shader.\cf9 ID\cf8 , \cf5 "pLight.linear"\cf8 ), \cf10 0.32f\cf8 );
+\f1 \cf0 \
+
+\f0 \cf8         \cf4 glUniform4f\cf8 (\cf4 glGetUniformLocation\cf8 (shader.\cf9 ID\cf8 , \cf5 "pLight.colour"\cf8 ), \cf9 pLightColour\cf8 .r,\cf9 pLightColour\cf8 .g,\cf9 pLightColour\cf8 .b,\cf10 1.0\cf8 );\cf2 //TELL THE SHADER WHERE THE LIGHT
+\f1 \cf0 \
+\
+
+\f0 \cf2 //        angle = angle * cos(deltaTime);
+\f1 \cf0 \
+
+\f0 \cf8         
+\f1 \cf0 \
+
+\f0 \cf8         \cf9 setCamera\cf8 (shader.\cf9 ID\cf8 ,translate,angle,\cf7 false\cf8 ); \cf2 //Setup for object, need to refactor into method for arbitrary placement
+\f1 \cf0 \
+
+\f0 \cf8         cloth.\cf9 Draw\cf8 (shader.\cf9 ID\cf8 );
+\f1 \cf0 \
+
+\f0 \cf8         
+\f1 \cf0 \
+
+\f0 \cf8         \cf9 glm\cf8 ::\cf9 mat4\cf8  modelMatrix = \cf9 glm\cf8 ::\cf9 mat4\cf8 (\cf10 1.0f\cf8 );
+\f1 \cf0 \
+
+\f0 \cf8         modelMatrix = \cf9 glm\cf8 ::\cf9 scale\cf8 (modelMatrix, \cf9 glm\cf8 ::\cf9 vec3\cf8 (\cf10 0.3f\cf8 ,\cf10 0.3f\cf8 ,\cf10 0.3f\cf8 ));
+\f1 \cf0 \
+
+\f0 \cf8         modelMatrix = \cf9 glm\cf8 ::\cf9 translate\cf8 (modelMatrix, \cf9 glm\cf8 ::\cf9 vec3\cf8 (\cf10 5.0f\cf8 , \cf10 0.75f\cf8 , \cf10 0.0f\cf8 ));
+\f1 \cf0 \
+
+\f0 \cf8         \cf9 GLuint\cf8  modelt = \cf4 glGetUniformLocation\cf8 (shader.\cf9 ID\cf8 , \cf5 "model"\cf8 ); \cf2 //model IS UNIFORM VARIABLE IN SHADER
+\f1 \cf0 \
+
+\f0 \cf8         \cf4 glUniformMatrix4fv\cf8 (modelt, \cf10 1\cf8 , \cf4 GL_FALSE\cf8 , &modelMatrix[\cf10 0\cf8 ][\cf10 0\cf8 ]);
+\f1 \cf0 \
+
+\f0 \cf8         model2.\cf9 Draw\cf8 (shader.\cf9 ID\cf8 );
+\f1 \cf0 \
+
+\f2 \cf6 ////////////////////////END NORMAL OBJECTS//////////////////////////// END
+\f1 \cf0 \
+
+\f0 \cf8         
+\f1 \cf0 \
+
+\f0 \cf8         \cf2 //  L I G H T //
+\f1 \cf0 \
+
+\f0 \cf8         \cf7 float\cf8  lightX = \cf10 0.0f\cf8 ;\cf2 // * sin(deltaTime);
+\f1 \cf0 \
+
+\f0 \cf8         \cf7 float\cf8  lightY = \cf10 150.0f\cf8 ;
+\f1 \cf0 \
+
+\f0 \cf8         \cf7 float\cf8  lightZ = \cf10 150.5f\cf8 ;\cf2 // * cos(deltaTime);
+\f1 \cf0 \
+
+\f0 \cf8         \cf9 lightPos\cf8  = \cf9 glm\cf8 ::\cf9 vec3\cf8 (lightX, lightY, lightZ);
+\f1 \cf0 \
+
+\f0 \cf8         
+\f1 \cf0 \
+
+\f0 \cf8         
+\f1 \cf0 \
+
+\f0 \cf8         \cf4 glUniform4f\cf8 (\cf4 glGetUniformLocation\cf8 (shader.\cf9 ID\cf8 , \cf5 "sun.lightPos"\cf8 ), -\cf9 lightPos\cf8 .x,-\cf9 lightPos\cf8 .y,-\cf9 lightPos\cf8 .z,\cf10 0.0\cf8 );\cf2 //TELL THE SHADER WHERE THE LIGHT
+\f1 \cf0 \
+
+\f0 \cf8         \cf4 glUniform4f\cf8 (\cf4 glGetUniformLocation\cf8 (shader.\cf9 ID\cf8 , \cf5 "pLight.position"\cf8 ), \cf9 pLightPos\cf8 .x,\cf9 pLightPos\cf8 .y,\cf9 pLightPos\cf8 .z,\cf10 1.0\cf8 );\cf2 //TELL THE SHADER WHERE THE LIGHT
+\f1 \cf0 \
+
+\f0 \cf8         
+\f1 \cf0 \
+
+\f0 \cf8         \cf4 glUniform4f\cf8 (\cf4 glGetUniformLocation\cf8 (shader.\cf9 ID\cf8 , \cf5 "viewPos"\cf8 ), \cf9 camera\cf8 .\cf9 Position\cf8 .x,\cf9 camera\cf8 .\cf9 Position\cf8 .y,\cf9 camera\cf8 .\cf9 Position\cf8 .z,\cf10 1.0\cf8 );
+\f1 \cf0 \
+
+\f0 \cf8         
+\f1 \cf0 \
+
+\f0 \cf8         lightShader.\cf9 Bind\cf8 (); \cf2 //glUseProgram(shaderID);
+\f1 \cf0 \
+
+\f0 \cf8         
+\f1 \cf0 \
+
+\f0 \cf8         \cf9 glm\cf8 ::\cf9 mat4\cf8  modelMatrixLIGHT = \cf9 glm\cf8 ::\cf9 mat4\cf8 (\cf10 1.0f\cf8 );
+\f1 \cf0 \
+
+\f0 \cf8         modelMatrixLIGHT = \cf9 glm\cf8 ::\cf9 scale\cf8 (modelMatrixLIGHT, \cf9 glm\cf8 ::\cf9 vec3\cf8 (\cf10 0.05f\cf8 ,\cf10 0.05f\cf8 ,\cf10 0.05f\cf8 ));
+\f1 \cf0 \
+
+\f0 \cf8         modelMatrixLIGHT = \cf9 glm\cf8 ::\cf9 translate\cf8 (modelMatrixLIGHT, \cf9 lightPos\cf8 );\cf2 //move to defined location
+\f1 \cf0 \
+
+\f0 \cf8         \cf9 GLuint\cf8  modelL = \cf4 glGetUniformLocation\cf8 (lightShader.\cf9 ID\cf8 , \cf5 "model"\cf8 ); \cf2 //model IS UNIFORM VARIABLE IN SHADER
+\f1 \cf0 \
+
+\f0 \cf8         \cf4 glUniformMatrix4fv\cf8 (modelL, \cf10 1\cf8 , \cf4 GL_FALSE\cf8 , &modelMatrixLIGHT[\cf10 0\cf8 ][\cf10 0\cf8 ]);
+\f1 \cf0 \
+
+\f0 \cf8         
+\f1 \cf0 \
+
+\f0 \cf8         \cf9 glm\cf8 ::\cf9 mat4\cf8  projectionL = \cf9 glm\cf8 ::\cf9 perspective\cf8 (\cf9 glm\cf8 ::\cf9 radians\cf8 (\cf9 camera\cf8 .\cf9 Zoom\cf8 ), (\cf7 float\cf8 )\cf9 width\cf8  / (\cf7 float\cf8 )\cf9 height\cf8 , \cf10 0.1f\cf8 , \cf10 100.0f\cf8 );
+\f1 \cf0 \
+
+\f0 \cf8         \cf9 GLuint\cf8  proj = \cf4 glGetUniformLocation\cf8 (lightShader.\cf9 ID\cf8 , \cf5 "projection"\cf8 ); \cf2 //projection IS UNIFORM VARIABLE IN SHADER
+\f1 \cf0 \
+
+\f0 \cf8         \cf4 glUniformMatrix4fv\cf8 (proj, \cf10 1\cf8 , \cf4 GL_FALSE\cf8 , &projectionL[\cf10 0\cf8 ][\cf10 0\cf8 ]);
+\f1 \cf0 \
+
+\f0 \cf8         
+\f1 \cf0 \
+
+\f0 \cf8         \cf9 glm\cf8 ::\cf9 mat4\cf8  view = \cf9 camera\cf8 .\cf9 GetViewMatrix\cf8 ();
+\f1 \cf0 \
+
+\f0 \cf8         \cf9 GLuint\cf8  v = \cf4 glGetUniformLocation\cf8 (lightShader.\cf9 ID\cf8 , \cf5 "view"\cf8 ); \cf2 //view IS UNIFORM VARIABLE IN SHADER
+\f1 \cf0 \
+
+\f0 \cf8         \cf4 glUniformMatrix4fv\cf8 (v, \cf10 1\cf8 , \cf4 GL_FALSE\cf8 , &view[\cf10 0\cf8 ][\cf10 0\cf8 ]);
+\f1 \cf0 \
+
+\f0 \cf8         
+\f1 \cf0 \
+
+\f0 \cf8         light.\cf9 Draw\cf8 (shader.\cf9 ID\cf8 );
+\f1 \cf0 \
+
+\f0 \cf8         
+\f1 \cf0 \
+
+\f0 \cf8         modelMatrixLIGHT = \cf9 glm\cf8 ::\cf9 mat4\cf8 (\cf10 1.0f\cf8 );
+\f1 \cf0 \
+
+\f0 \cf8         modelMatrixLIGHT = \cf9 glm\cf8 ::\cf9 scale\cf8 (modelMatrixLIGHT, \cf9 glm\cf8 ::\cf9 vec3\cf8 (\cf10 0.05f\cf8 ,\cf10 0.05f\cf8 ,\cf10 0.05f\cf8 ));
+\f1 \cf0 \
+
+\f0 \cf8         modelMatrixLIGHT = \cf9 glm\cf8 ::\cf9 translate\cf8 (modelMatrixLIGHT, \cf9 pLightPos\cf8 );\cf2 //move to defined location
+\f1 \cf0 \
+
+\f0 \cf8         \cf9 GLuint\cf8  modelLL = \cf4 glGetUniformLocation\cf8 (lightShader.\cf9 ID\cf8 , \cf5 "model"\cf8 ); \cf2 //model IS UNIFORM` VARIABLE IN SHADER
+\f1 \cf0 \
+
+\f0 \cf8         \cf4 glUniformMatrix4fv\cf8 (modelLL, \cf10 1\cf8 , \cf4 GL_FALSE\cf8 , &modelMatrixLIGHT[\cf10 0\cf8 ][\cf10 0\cf8 ]);
+\f1 \cf0 \
+
+\f0 \cf8        
+\f1 \cf0 \
+
+\f0 \cf8         
+\f1 \cf0 \
+
+\f0 \cf8         \cf7 float\cf8  pX = \cf10 10.0f\cf8  * \cf11 sin\cf8 (\cf9 deltaTime\cf8 );
+\f1 \cf0 \
+
+\f0 \cf8         \cf7 float\cf8  pY = \cf10 15.0f\cf8  +\cf11 cos\cf8 (\cf9 deltaTime\cf8 )+\cf10 10.0f\cf8 /\cf11 tan\cf8 (\cf9 deltaTime\cf8 )*\cf11 sin\cf8 (\cf9 deltaTime\cf8 ); \cf2 //10.0f is the offset
+\f1 \cf0 \
+
+\f0 \cf8         \cf7 float\cf8  pZ = \cf10 10.0f\cf8  * \cf11 cos\cf8 (\cf9 deltaTime\cf8 );
+\f1 \cf0 \
+
+\f0 \cf8         \cf9 pLightPos\cf8  = \cf9 glm\cf8 ::\cf9 vec3\cf8 (pX,pY,pZ);
+\f1 \cf0 \
+
+\f0 \cf8         
+\f1 \cf0 \
+
+\f0 \cf8         lightP.\cf9 Draw\cf8 (shader.\cf9 ID\cf8 );
+\f1 \cf0 \
+
+\f0 \cf8         
+\f1 \cf0 \
+
+\f0 \cf8         \cf2 //END LIGHT
+\f1 \cf0 \
+
+\f0 \cf8         
+\f1 \cf0 \
+
+\f2 \cf6 ////////////////////    SKYBOX  //////////////////////////// START
+\f1 \cf0 \
+
+\f0 \cf9 glDepthFunc\cf8 (\cf4 GL_LEQUAL\cf8 );  \cf2 // change depth function so depth test passes when values are equal to depth buffer's content
+\f1 \cf0 \
+
+\f0 \cf8     skyboxShader.\cf9 Bind\cf8 ();
+\f1 \cf0 \
+
+\f0 \cf8         view = \cf9 glm\cf8 ::\cf9 mat4\cf8 (\cf9 glm\cf8 ::\cf9 mat3\cf8 (\cf9 camera\cf8 .\cf9 GetViewMatrix\cf8 ())); \cf2 // remove translation from the view matrix
+\f1 \cf0 \
+
+\f0 \cf8             \cf4 glUniformMatrix4fv\cf8 ((\cf4 glGetUniformLocation\cf8 (skyboxShader.\cf9 ID\cf8 ,\cf5 "view"\cf8 )),\cf10 1\cf8 ,\cf4 GL_FALSE\cf8 ,&view[\cf10 0\cf8 ][\cf10 0\cf8 ]);
+\f1 \cf0 \
+
+\f0 \cf8             \cf4 glUniformMatrix4fv\cf8 ((\cf4 glGetUniformLocation\cf8 (skyboxShader.\cf9 ID\cf8 ,\cf5 "projection"\cf8 )),\cf10 1\cf8 ,\cf4 GL_FALSE\cf8 ,&projectionL[\cf10 0\cf8 ][\cf10 0\cf8 ]);
+\f1 \cf0 \
+
+\f0 \cf8                 world->\cf9 Draw\cf8 ();
+\f1 \cf0 \
+
+\f0 \cf9 glDepthFunc\cf8 (\cf4 GL_LESS\cf8 ); \cf2 //Default requirements to pass the depth test.
+\f1 \cf0 \
+
+\f0 \cf8         
+\f2 \cf6 ////////////////////    SKYBOX  //////////////////////////// END
+\f1 \cf0 \
+
+\f0 \cf8         
+\f1 \cf0 \
+
+\f0 \cf8         
+\f1 \cf0 \
+
+\f0 \cf8         \cf2 //LoadCamera(shader.ID); Depreciated
+\f1 \cf0 \
+
+\f0 \cf8       
+\f1 \cf0 \
+
+\f0 \cf8         \cf2 // Swap buffers
+\f1 \cf0 \
+
+\f0 \cf8         \cf9 glfwSwapBuffers\cf8 (\cf9 window\cf8 );
+\f1 \cf0 \
+
+\f0 \cf8         \cf9 glfwPollEvents\cf8 ();
+\f1 \cf0 \
+
+\f0 \cf8     \}
+\f1 \cf0 \
+
+\f0 \cf8      \cf9 glfwTerminate\cf8 ();
+\f1 \cf0 \
+
+\f0 \cf8 \}
+\f1 \cf0 \
+
+\f2 \cf6 /////////////////////////////////////   MAIN LOOP END   ///////////////////////////////////////////////////////////////////////////////
+\f1 \cf0 \
+\
+
+\f0 \cf7 void\cf8  hints()\{
+\f1 \cf0 \
+
+\f0 \cf8     \cf9 glfwWindowHint\cf8 (\cf4 GLFW_SAMPLES\cf8 , \cf10 4\cf8 ); \cf2 // 4x antialiasing
+\f1 \cf0 \
+
+\f0 \cf8     \cf9 glfwWindowHint\cf8 (\cf4 GLFW_CONTEXT_VERSION_MAJOR\cf8 , \cf10 4\cf8 ); \cf2 // We want OpenGL 4.1
+\f1 \cf0 \
+
+\f0 \cf8     \cf9 glfwWindowHint\cf8 (\cf4 GLFW_CONTEXT_VERSION_MINOR\cf8 , \cf10 1\cf8 );
+\f1 \cf0 \
+
+\f0 \cf8     \cf9 glfwWindowHint\cf8 (\cf4 GLFW_OPENGL_FORWARD_COMPAT\cf8 , \cf4 GL_TRUE\cf8 ); \cf2 // To make MacOS happy; should not be needed
+\f1 \cf0 \
+
+\f0 \cf8     \cf9 glfwWindowHint\cf8 (\cf4 GLFW_OPENGL_PROFILE\cf8 , \cf4 GLFW_OPENGL_CORE_PROFILE\cf8 ); \cf2 // We don't want the old OpenGL
+\f1 \cf0 \
+
+\f0 \cf8 \}
+\f1 \cf0 \
+\
+
+\f0 \cf7 int\cf8  windowInit()\{
+\f1 \cf0 \
+
+\f0 \cf8     \cf2 // Open a window and create its OpenGL context
+\f1 \cf0 \
+
+\f0 \cf8     
+\f1 \cf0 \
+
+\f0 \cf8     \cf9 window\cf8  = \cf9 glfwCreateWindow\cf8 ( \cf10 1024\cf8 , \cf10 768\cf8 , \cf5 "Tutorial 01"\cf8 , \cf7 NULL\cf8 , \cf7 NULL\cf8 );
+\f1 \cf0 \
+
+\f0 \cf8     \cf7 if\cf8 ( \cf9 window\cf8  == \cf7 NULL\cf8  )\{
+\f1 \cf0 \
+
+\f0 \cf8         \cf11 fprintf\cf8 ( \cf4 stderr\cf8 , \cf5 "Failed to open GLFW window. If you have an Intel GPU, they are not 3.3 compatible. Try the 2.1 version of the tutorials.\\n"\cf8  );
+\f1 \cf0 \
+
+\f0 \cf8         \cf9 glfwTerminate\cf8 ();
+\f1 \cf0 \
+
+\f0 \cf8         \cf7 return\cf8  -\cf10 1\cf8 ;
+\f1 \cf0 \
+
+\f0 \cf8     \}
+\f1 \cf0 \
+
+\f0 \cf8     \cf9 glfwMakeContextCurrent\cf8 (\cf9 window\cf8 ); \cf2 // Initialize GLEW
+\f1 \cf0 \
+
+\f0 \cf8     \cf9 glewExperimental\cf8 =\cf7 true\cf8 ; \cf2 // Needed in core profile
+\f1 \cf0 \
+
+\f0 \cf8     \cf7 if\cf8  (\cf9 glewInit\cf8 () != \cf4 GLEW_OK\cf8 ) \{
+\f1 \cf0 \
+
+\f0 \cf8         \cf11 fprintf\cf8 (\cf4 stderr\cf8 , \cf5 "Failed to initialize GLEW\\n"\cf8 );
+\f1 \cf0 \
+
+\f0 \cf8         \cf7 return\cf8  -\cf10 1\cf8 ;
+\f1 \cf0 \
+
+\f0 \cf8     \}
+\f1 \cf0 \
+
+\f0 \cf8     
+\f1 \cf0 \
+
+\f0 \cf8     \cf7 return\cf8  \cf10 1\cf8 ;
+\f1 \cf0 \
+
+\f0 \cf8 \}
+\f1 \cf0 \
+\
+\
+
+\f2 \cf6 /**
+\f1 \cf0 \
+
+\f2 \cf6     Mouse movement
+\f1 \cf0 \
+
+\f2 \cf6  */
+\f1 \cf0 \
+
+\f0 \cf7 void\cf8  mouse_callback(\cf9 GLFWwindow\cf8 * window, \cf7 double\cf8  xpos, \cf7 double\cf8  ypos)
+\f1 \cf0 \
+
+\f0 \cf8 \{
+\f1 \cf0 \
+
+\f0 \cf8     \cf7 if\cf8  (\cf9 firstMouse\cf8 )
+\f1 \cf0 \
+
+\f0 \cf8     \{
+\f1 \cf0 \
+
+\f0 \cf8         \cf9 lastX\cf8  = xpos;
+\f1 \cf0 \
+
+\f0 \cf8         \cf9 lastY\cf8  = ypos;
+\f1 \cf0 \
+
+\f0 \cf8         \cf9 firstMouse\cf8  = \cf7 false\cf8 ;
+\f1 \cf0 \
+
+\f0 \cf8     \}
+\f1 \cf0 \
+
+\f0 \cf8     
+\f1 \cf0 \
+
+\f0 \cf8     \cf7 float\cf8  xoffset = xpos - \cf9 lastX\cf8 ;
+\f1 \cf0 \
+
+\f0 \cf8     \cf7 float\cf8  yoffset = \cf9 lastY\cf8  - ypos; \cf2 // reversed since y-coordinates go from bottom to top
+\f1 \cf0 \
+
+\f0 \cf8     
+\f1 \cf0 \
+
+\f0 \cf8     \cf9 lastX\cf8  = xpos;
+\f1 \cf0 \
+
+\f0 \cf8     \cf9 lastY\cf8  = ypos;
+\f1 \cf0 \
+
+\f0 \cf8     
+\f1 \cf0 \
+
+\f0 \cf8     \cf9 camera\cf8 .\cf9 ProcessMouseMovement\cf8 (xoffset, yoffset);
+\f1 \cf0 \
+
+\f0 \cf8 \}
+\f1 \cf0 \
+
+\f2 \cf6 /**
+\f1 \cf0 \
+
+\f2 \cf6     Mouse Scroll
+\f1 \cf0 \
+
+\f2 \cf6  */
+\f1 \cf0 \
+
+\f0 \cf7 void\cf8  scroll_callback(\cf9 GLFWwindow\cf8 * window, \cf7 double\cf8  xoffset, \cf7 double\cf8  yoffset)
+\f1 \cf0 \
+
+\f0 \cf8 \{
+\f1 \cf0 \
+
+\f0 \cf8     \cf9 camera\cf8 .\cf9 ProcessMouseScroll\cf8 (yoffset);
+\f1 \cf0 \
+
+\f0 \cf8 \}
+\f1 \cf0 \
+
+\f0 \cf7 void\cf8  framebuffer_size_callback(\cf9 GLFWwindow\cf8 * window, \cf7 int\cf8  width, \cf7 int\cf8  height)
+\f1 \cf0 \
+
+\f0 \cf8 \{
+\f1 \cf0 \
+
+\f0 \cf8     \cf2 // make sure the viewport matches the new window dimensions; note that width and
+\f1 \cf0 \
+
+\f0 \cf8     \cf2 // height will be significantly larger than specified on retina displays.
+\f1 \cf0 \
+
+\f0 \cf8     \cf9 glViewport\cf8 (\cf10 0\cf8 , \cf10 0\cf8 , width, height);
+\f1 \cf0 \
+
+\f0 \cf8 \}
+\f1 \cf0 \
+\
+
+\f2 \cf6 /**
+\f1 \cf0 \
+
+\f2 \cf6  Self explanatory method.
+\f1 \cf0 \
+
+\f2 \cf6  */
+\f1 \cf0 \
+
+\f0 \cf7 void\cf8  processInput(\cf9 GLFWwindow\cf8  *window)
+\f1 \cf0 \
+
+\f0 \cf8 \{
+\f1 \cf0 \
+
+\f0 \cf8     \cf7 if\cf8  (\cf9 glfwGetKey\cf8 (window, \cf4 GLFW_KEY_ESCAPE\cf8 ) == \cf4 GLFW_PRESS\cf8 )
+\f1 \cf0 \
+
+\f0 \cf8         \cf9 glfwSetWindowShouldClose\cf8 (window, \cf7 true\cf8 );
+\f1 \cf0 \
+
+\f0 \cf8     
+\f1 \cf0 \
+
+\f0 \cf8     \cf7 if\cf8  (\cf9 glfwGetKey\cf8 (window, \cf4 GLFW_KEY_W\cf8 ) == \cf4 GLFW_PRESS\cf8 )   \cf9 camera\cf8 .\cf9 ProcessKeyboard\cf8 (\cf9 Camera\cf8 ::\cf9 FORWARD\cf8 , \cf9 deltaTime\cf8 );
+\f1 \cf0 \
+
+\f0 \cf8     \cf7 if\cf8  (\cf9 glfwGetKey\cf8 (window, \cf4 GLFW_KEY_S\cf8 ) == \cf4 GLFW_PRESS\cf8 )   \cf9 camera\cf8 .\cf9 ProcessKeyboard\cf8 (\cf9 Camera\cf8 ::\cf9 BACKWARD\cf8 , \cf9 deltaTime\cf8 );
+\f1 \cf0 \
+
+\f0 \cf8     \cf7 if\cf8  (\cf9 glfwGetKey\cf8 (window, \cf4 GLFW_KEY_A\cf8 ) == \cf4 GLFW_PRESS\cf8 )   \cf9 camera\cf8 .\cf9 ProcessKeyboard\cf8 (\cf9 Camera\cf8 ::\cf9 LEFT\cf8 , \cf9 deltaTime\cf8 );
+\f1 \cf0 \
+
+\f0 \cf8     \cf7 if\cf8  (\cf9 glfwGetKey\cf8 (window, \cf4 GLFW_KEY_D\cf8 ) == \cf4 GLFW_PRESS\cf8 )   \cf9 camera\cf8 .\cf9 ProcessKeyboard\cf8 (\cf9 Camera\cf8 ::\cf9 RIGHT\cf8 , \cf9 deltaTime\cf8 );
+\f1 \cf0 \
+
+\f0 \cf8     
+\f1 \cf0 \
+
+\f0 \cf8     
+\f1 \cf0 \
+
+\f0 \cf8     \cf2 //can also implement mechanical moving light, reacting to button press.
+\f1 \cf0 \
+
+\f0 \cf8     \cf7 if\cf8  (\cf9 glfwGetKey\cf8 (window, \cf4 GLFW_KEY_LEFT\cf8 ) == \cf4 GLFW_PRESS\cf8 )        \cf9 lightPos\cf8 .x -= \cf10 0.1f\cf8 ;
+\f1 \cf0 \
+
+\f0 \cf8     \cf7 if\cf8  (\cf9 glfwGetKey\cf8 (window, \cf4 GLFW_KEY_RIGHT\cf8 ) == \cf4 GLFW_PRESS\cf8 )       \cf9 lightPos\cf8 .x += \cf10 0.1f\cf8 ;
+\f1 \cf0 \
+
+\f0 \cf8     \cf7 if\cf8  (\cf9 glfwGetKey\cf8 (window, \cf4 GLFW_KEY_UP\cf8 ) == \cf4 GLFW_PRESS\cf8 )          \cf9 lightPos\cf8 .y += \cf10 0.1f\cf8 ;
+\f1 \cf0 \
+
+\f0 \cf8     \cf7 if\cf8  (\cf9 glfwGetKey\cf8 (window, \cf4 GLFW_KEY_DOWN\cf8 ) == \cf4 GLFW_PRESS\cf8 )        \cf9 lightPos\cf8 .y -= \cf10 0.1f\cf8 ;
+\f1 \cf0 \
+
+\f0 \cf8     \cf7 if\cf8  (\cf9 glfwGetKey\cf8 (window, \cf4 GLFW_KEY_PERIOD\cf8 ) == \cf4 GLFW_PRESS\cf8 )      \cf9 lightPos\cf8 .z -= \cf10 0.1f\cf8 ;
+\f1 \cf0 \
+
+\f0 \cf8     \cf7 if\cf8  (\cf9 glfwGetKey\cf8 (window, \cf4 GLFW_KEY_SLASH\cf8 ) == \cf4 GLFW_PRESS\cf8 )       \cf9 lightPos\cf8 .z += \cf10 0.1f\cf8 ;
+\f1 \cf0 \
+
+\f0 \cf8     
+\f1 \cf0 \
+
+\f0 \cf8                     
+\f2 \cf6 //!!!!!!!DISCO DISCO!!!!!!!!!!!//
+\f1 \cf0 \
+
+\f0 \cf8     \cf7 if\cf8 (\cf9 glfwGetKey\cf8 (window, \cf4 GLFW_KEY_X\cf8 ) == \cf4 GLFW_PRESS\cf8 ) \{
+\f1 \cf0 \
+
+\f0 \cf8         \cf7 if\cf8 (\cf9 glfwGetKey\cf8 (window, \cf4 GLFW_KEY_R\cf8 ) == \cf4 GLFW_PRESS\cf8 ) \cf9 pLightColour\cf8 .r -= \cf10 0.1f\cf8 ;
+\f1 \cf0 \
+
+\f0 \cf8         \cf7 if\cf8 (\cf9 glfwGetKey\cf8 (window, \cf4 GLFW_KEY_G\cf8 ) == \cf4 GLFW_PRESS\cf8 ) \cf9 pLightColour\cf8 .g -= \cf10 0.1f\cf8 ;
+\f1 \cf0 \
+
+\f0 \cf8         \cf7 if\cf8 (\cf9 glfwGetKey\cf8 (window, \cf4 GLFW_KEY_B\cf8 ) == \cf4 GLFW_PRESS\cf8 ) \cf9 pLightColour\cf8 .b -= \cf10 0.1f\cf8 ;
+\f1 \cf0 \
+
+\f0 \cf8     \}
+\f1 \cf0 \
+
+\f0 \cf8     \cf7 else\cf8  \cf7 if\cf8  (\cf9 glfwGetKey\cf8 (window, \cf4 GLFW_KEY_R\cf8 ) == \cf4 GLFW_PRESS\cf8 )\{
+\f1 \cf0 \
+
+\f0 \cf8         \cf7 if\cf8  (\cf9 glfwGetKey\cf8 (window, \cf4 GLFW_KEY_X\cf8 ) != \cf4 GLFW_PRESS\cf8 ) \cf9 pLightColour\cf8 .r += \cf10 0.1f\cf8 ;
+\f1 \cf0 \
+
+\f0 \cf8     \}
+\f1 \cf0 \
+
+\f0 \cf8     \cf7 else\cf8  \cf7 if\cf8  (\cf9 glfwGetKey\cf8 (window, \cf4 GLFW_KEY_G\cf8 ) == \cf4 GLFW_PRESS\cf8 )\{
+\f1 \cf0 \
+
+\f0 \cf8         \cf7 if\cf8  (\cf9 glfwGetKey\cf8 (window, \cf4 GLFW_KEY_X\cf8 ) != \cf4 GLFW_PRESS\cf8 ) \cf9 pLightColour\cf8 .g += \cf10 0.1f\cf8 ;
+\f1 \cf0 \
+
+\f0 \cf8     \}
+\f1 \cf0 \
+
+\f0 \cf8     \cf7 else\cf8  \cf7 if\cf8  (\cf9 glfwGetKey\cf8 (window, \cf4 GLFW_KEY_B\cf8 ) == \cf4 GLFW_PRESS\cf8 )\{
+\f1 \cf0 \
+
+\f0 \cf8         \cf7 if\cf8  (\cf9 glfwGetKey\cf8 (window, \cf4 GLFW_KEY_X\cf8 ) != \cf4 GLFW_PRESS\cf8 ) \cf9 pLightColour\cf8 .b += \cf10 0.1f\cf8 ;
+\f1 \cf0 \
+
+\f0 \cf8     \}
+\f1 \cf0 \
+
+\f0 \cf8 \}
+\f1 \cf0 \
+\
+
+\f2 \cf6 /**
+\f1 \cf0 \
+
+\f2 \cf6  setCamera(); or setPosition();
+\f1 \cf0 \
+
+\f2 \cf6  This method is to handle the MVP matrix layout for each object.
+\f1 \cf0 \
+
+\f2 \cf6         Its not really a camera, just changing the matrices for each object assigned to each shader.
+\f1 \cf0 \
+
+\f2 \cf6  -Parameters:
+\f1 \cf0 \
+
+\f2 \cf6     -GLuint ID: this is for assigning the matrix to the shader you want.
+\f1 \cf0 \
+
+\f2 \cf6     -translation: this is a VEC3 of a position you want the model to be stored in.
+\f1 \cf0 \
+
+\f2 \cf6     -angle: the angle which you want to rotate an object by.
+\f1 \cf0 \
+
+\f2 \cf6     -trans: if true then you want to translate the model, if false the model matrix is left as the identity matrix.
+\f1 \cf0 \
+
+\f2 \cf6  **/
+\f1 \cf0 \
+
+\f0 \cf7 void\cf8  setCamera(\cf9 GLuint\cf8  ID, \cf9 glm\cf8 ::\cf9 vec3\cf8  translation, \cf7 float\cf8  angle, \cf7 bool\cf8  trans)\{
+\f1 \cf0 \
+
+\f0 \cf8     
+\f1 \cf0 \
+
+\f0 \cf8     \cf9 glm\cf8 ::\cf9 mat4\cf8  projection = \cf9 glm\cf8 ::\cf9 perspective\cf8 (\cf9 glm\cf8 ::\cf9 radians\cf8 (\cf9 camera\cf8 .\cf9 Zoom\cf8 ), (\cf7 float\cf8 )\cf9 width\cf8  / (\cf7 float\cf8 )\cf9 height\cf8 , \cf10 0.1f\cf8 , \cf10 100.0f\cf8 );
+\f1 \cf0 \
+
+\f0 \cf8     
+\f1 \cf0 \
+
+\f0 \cf8     \cf9 GLuint\cf8  proj = \cf4 glGetUniformLocation\cf8 (ID, \cf5 "projection"\cf8 ); \cf2 //projection IS UNIFORM VARIABLE IN SHADER
+\f1 \cf0 \
+
+\f0 \cf8     \cf4 glUniformMatrix4fv\cf8 (proj, \cf10 1\cf8 , \cf4 GL_FALSE\cf8 , &projection[\cf10 0\cf8 ][\cf10 0\cf8 ]);
+\f1 \cf0 \
+
+\f0 \cf8     
+\f1 \cf0 \
+
+\f0 \cf8     \cf9 glm\cf8 ::\cf9 mat4\cf8  view = \cf9 camera\cf8 .\cf9 GetViewMatrix\cf8 ();
+\f1 \cf0 \
+
+\f0 \cf8     \cf9 GLuint\cf8  viewI = \cf4 glGetUniformLocation\cf8 (ID, \cf5 "view"\cf8 ); \cf2 //view IS UNIFORM VARIABLE IN SHADER
+\f1 \cf0 \
+
+\f0 \cf8     \cf4 glUniformMatrix4fv\cf8 (viewI, \cf10 1\cf8 , \cf4 GL_FALSE\cf8 , &view[\cf10 0\cf8 ][\cf10 0\cf8 ]);
+\f1 \cf0 \
+
+\f0 \cf8     
+\f1 \cf0 \
+
+\f0 \cf8     \cf9 glm\cf8 ::\cf9 mat4\cf8  model(\cf10 1.0f\cf8 );
+\f1 \cf0 \
+
+\f0 \cf8     
+\f1 \cf0 \
+
+\f0 \cf8     \cf7 if\cf8 (trans)\{
+\f1 \cf0 \
+
+\f0 \cf8         model = \cf9 glm\cf8 ::\cf9 translate\cf8 (model, translation);
+\f1 \cf0 \
+
+\f0 \cf8         model = \cf9 glm\cf8 ::\cf9 rotate\cf8 (model, \cf9 glm\cf8 ::\cf9 radians\cf8 (angle), \cf9 glm\cf8 ::\cf9 vec3\cf8 (\cf10 1.0f\cf8 , \cf10 1.0f\cf8 , \cf10 1.0f\cf8 ));
+\f1 \cf0 \
+
+\f0 \cf8     \}
+\f1 \cf0 \
+
+\f0 \cf8     \cf7 else\cf8 \{
+\f1 \cf0 \
+
+\f0 \cf8         model = \cf9 glm\cf8 ::\cf9 mat4\cf8 (\cf10 1.0f\cf8 );
+\f1 \cf0 \
+
+\f0 \cf8     \}
+\f1 \cf0 \
+
+\f0 \cf8     
+\f1 \cf0 \
+
+\f0 \cf8     \cf9 GLuint\cf8  modelI = \cf4 glGetUniformLocation\cf8 (ID, \cf5 "model"\cf8 ); \cf2 //model IS UNIFORM VARIABLE IN SHADER
+\f1 \cf0 \
+
+\f0 \cf8     \cf4 glUniformMatrix4fv\cf8 (modelI, \cf10 1\cf8 , \cf4 GL_FALSE\cf8 , &model[\cf10 0\cf8 ][\cf10 0\cf8 ]);
+\f1 \cf0 \
+
+\f0 \cf8 \}
+\f1 \cf0 \
+\
+
+\f2 \cf6 /**
+\f1 \cf0 \
+
+\f2 \cf6  Depreciated method.
+\f1 \cf0 \
+
+\f2 \cf6  - See setCamera();
+\f1 \cf0 \
+
+\f2 \cf6  //
+\f1 \cf0 \
+
+\f2 \cf6  void LoadCamera(GLuint programID)\{
+\f1 \cf0 \
+
+\f2 \cf6  
+\f1 \cf0 \
+
+\f2 \cf6  // Model matrix : an identity matrix (model will be at the origin)
+\f1 \cf0 \
+
+\f2 \cf6  ModelMatrix = glm::mat4(1.0f);
+\f1 \cf0 \
+
+\f2 \cf6  
+\f1 \cf0 \
+
+\f2 \cf6  // Camera matrix (moving the world)
+\f1 \cf0 \
+
+\f2 \cf6  View = glm::lookAt(
+\f1 \cf0 \
+
+\f2 \cf6  glm::vec3(0,1.5,0.5), // Camera is at (4,3,3), in World Space
+\f1 \cf0 \
+
+\f2 \cf6  glm::vec3(0,1.5,0), // and looks at the origin
+\f1 \cf0 \
+
+\f2 \cf6  glm::vec3(0,1,0)  // Head is up (set to 0,-1,0 to look upside-down)
+\f1 \cf0 \
+
+\f2 \cf6  );
+\f1 \cf0 \
+
+\f2 \cf6  
+\f1 \cf0 \
+
+\f2 \cf6  Projection = glm::perspective(glm::radians(50.0f), (float) width / (float)height, 0.1f, 100.0f);
+\f1 \cf0 \
+
+\f2 \cf6  
+\f1 \cf0 \
+
+\f2 \cf6  // Our ModelViewProjection : multiplication of our 3 matrices
+\f1 \cf0 \
+
+\f2 \cf6  mvp = Projection * View * ModelMatrix; // Remember, matrix multiplication is the other way around
+\f1 \cf0 \
+
+\f2 \cf6  
+\f1 \cf0 \
+
+\f2 \cf6  GLuint MatrixID = glGetUniformLocation(programID, "MVP"); //MVP IS UNIFORM VARIABLE IN SHADER
+\f1 \cf0 \
+
+\f2 \cf6  // Send our transformation to the currently bound shader, in the "MVP" uniform
+\f1 \cf0 \
+
+\f2 \cf6  // This is done in the main loop since each model will have a different MVP matrix (At least for the M part)
+\f1 \cf0 \
+
+\f2 \cf6  
+\f1 \cf0 \
+
+\f2 \cf6  glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &mvp[0][0]);
+\f1 \cf0 \
+
+\f2 \cf6  \}
+\f1 \cf0 \
+
+\f2 \cf6  **/
+\f1 \cf0 \
+\
+
+\f2 \cf6 /*!!
+\f1 \cf0 \
+
+\f2 \cf6  Major changes to program:
+\f1 \cf0 \
+
+\f2 \cf6     Pre.A.1: Implemented camera class
+\f1 \cf0 \
+
+\f2 \cf6     Pre.A.2: Implemented partial method to automate matrix adjustments in setCamera();
+\f1 \cf0 \
+
+\f2 \cf6     Pre.A.3:
+\f1 \cf0 \
+
+\f2 \cf6 !!*/
+\f1 \cf0 \
+\
+\
+
+\f0 \cf2 //
+\f1 \cf0 \
+
+\f0 \cf2 //  Shader.cpp
+\f1 \cf0 \
+
+\f0 \cf2 //  OpenGL trial
+\f1 \cf0 \
+
+\f0 \cf2 //
+\f1 \cf0 \
+
+\f0 \cf2 //  This shader class was created with the help of BennyQBD tutorials.
+\f1 \cf0 \
+
+\f0 \cf2 //  \cf12 \cb3 https://github.com/BennyQBD/ModernOpenGLTutorial
+\f1 \cf0 \cb3 \
+
+\f0 \cf2 //
+\f1 \cf0 \
+
+\f0 \cf2 //  Created by Rashid on 10/5/18.
+\f1 \cf0 \
+
+\f0 \cf2 //  Copyright \'a9 2018 Rashid. All rights reserved.
+\f1 \cf0 \
+
+\f0 \cf2 //
+\f1 \cf0 \
+\
+
+\f0 \cf4 #include \cf5 "Shader.hpp"
+\f1 \cf0 \
+
+\f0 \cf4 #include \cf5 <iostream>
+\f1 \cf0 \
+
+\f0 \cf4 #include \cf5 <fstream>
+\f1 \cf0 \
+\
+
+\f0 \cf9 Shader\cf8 ::Shader(\cf7 const\cf8  \cf11 std\cf8 ::\cf11 string\cf8 & file)\{ \cf2 //gets shader path
+\f1 \cf0 \
+
+\f0 \cf8     
+\f1 \cf0 \
+
+\f0 \cf8     \cf9 ID\cf8  = \cf4 glCreateProgram\cf8 ();
+\f1 \cf0 \
+
+\f0 \cf8     \cf9 shaders\cf8 [\cf10 0\cf8 ] = \cf9 CreateShader\cf8 (\cf9 LoadShader\cf8 (file+\cf5 ".vs"\cf8 ), \cf4 GL_VERTEX_SHADER\cf8 ); \cf2 //vertex shader
+\f1 \cf0 \
+
+\f0 \cf8     \cf9 shaders\cf8 [\cf10 1\cf8 ] = \cf9 CreateShader\cf8 (\cf9 LoadShader\cf8 (file+\cf5 ".fs"\cf8 ), \cf4 GL_FRAGMENT_SHADER\cf8 ); \cf2 //fragment shader
+\f1 \cf0 \
+
+\f0 \cf8     
+\f1 \cf0 \
+
+\f0 \cf8     \cf7 for\cf8 (\cf7 unsigned\cf8  \cf7 int\cf8  i = \cf10 0\cf8 ; i < \cf9 NUM_SHADERS\cf8 ; i++)\{
+\f1 \cf0 \
+
+\f0 \cf8         \cf4 glAttachShader\cf8 (\cf9 ID\cf8 , \cf9 shaders\cf8 [i]); \cf2 //attaches the shaders to your program
+\f1 \cf0 \
+
+\f0 \cf8     \}
+\f1 \cf0 \
+
+\f0 \cf8     
+\f1 \cf0 \
+
+\f0 \cf8     \cf2 /*/ Tells the program how to read the attrib array. so we know all atributes with 0 is location/*/
+\f1 \cf0 \
+
+\f0 \cf8     
+\f1 \cf0 \
+
+\f0 \cf8     \cf4 glBindAttribLocation\cf8 (\cf9 ID\cf8 ,\cf10 0\cf8 ,\cf5 "position"\cf8 ); \cf2 //allocates space in the GPU. tells the GPU this space in the array only for position coordinates
+\f1 \cf0 \
+
+\f0 \cf8     \cf4 glBindAttribLocation\cf8 (\cf9 ID\cf8 , \cf10 1\cf8 , \cf5 "normal"\cf8 );\cf2 //allocates space in the GPU. tells the GPU this space in the array only for normal coordinates
+\f1 \cf0 \
+
+\f0 \cf8     \cf4 glBindAttribLocation\cf8 (\cf9 ID\cf8 , \cf10 2\cf8 , \cf5 "textCoord"\cf8 );\cf2 //allocates space in the GPU. tells the GPU this space in the array only for TEXTURE coordinates (VEC2)
+\f1 \cf0 \
+
+\f0 \cf8     \cf4 glBindAttribLocation\cf8 (\cf9 ID\cf8 ,\cf10 3\cf8 ,\cf5 "tangent"\cf8 );
+\f1 \cf0 \
+
+\f0 \cf8     \cf4 glBindAttribLocation\cf8 (\cf9 ID\cf8 ,\cf10 4\cf8 ,\cf5 "Bitangent"\cf8 );
+\f1 \cf0 \
+
+\f0 \cf8     
+\f1 \cf0 \
+
+\f0 \cf8     \cf4 glLinkProgram\cf8 (\cf9 ID\cf8 );
+\f1 \cf0 \
+
+\f0 \cf8     \cf9 CheckShaderError\cf8 (\cf9 ID\cf8 , \cf4 GL_LINK_STATUS\cf8 , \cf7 true\cf8 ,\cf5 "Erorr Linking program bro!"\cf8 );
+\f1 \cf0 \
+
+\f0 \cf8     
+\f1 \cf0 \
+
+\f0 \cf8     \cf4 glValidateProgram\cf8 (\cf9 ID\cf8 );
+\f1 \cf0 \
+
+\f0 \cf8     \cf9 CheckShaderError\cf8 (\cf9 ID\cf8 , \cf4 GL_VALIDATE_STATUS\cf8 , \cf7 true\cf8 ,\cf5 "Erorr program invalid bro!"\cf8 );
+\f1 \cf0 \
+
+\f0 \cf8 \}
+\f1 \cf0 \
+\
+
+\f0 \cf2 /*
+\f1 \cf0 \
+
+\f0 \cf2  File reader for our shader
+\f1 \cf0 \
+
+\f0 \cf2  */
+\f1 \cf0 \
+
+\f0 \cf11 std\cf8 ::\cf11 string\cf8  \cf9 Shader\cf8 ::LoadShader(\cf7 const\cf8  \cf11 std\cf8 ::\cf11 string\cf8 & fileName)
+\f1 \cf0 \
+
+\f0 \cf8 \{
+\f1 \cf0 \
+
+\f0 \cf8     \cf11 std\cf8 ::\cf11 ifstream\cf8  file;
+\f1 \cf0 \
+
+\f0 \cf8     file.\cf11 open\cf8 ((fileName).\cf11 c_str\cf8 ());
+\f1 \cf0 \
+
+\f0 \cf8     
+\f1 \cf0 \
+
+\f0 \cf8     \cf11 std\cf8 ::\cf11 string\cf8  output;
+\f1 \cf0 \
+
+\f0 \cf8     \cf11 std\cf8 ::\cf11 string\cf8  line;
+\f1 \cf0 \
+
+\f0 \cf8     
+\f1 \cf0 \
+
+\f0 \cf8     \cf7 if\cf8 (file.\cf11 is_open\cf8 ())
+\f1 \cf0 \
+
+\f0 \cf8     \{
+\f1 \cf0 \
+
+\f0 \cf8         \cf7 while\cf8 (file.\cf11 good\cf8 ())
+\f1 \cf0 \
+
+\f0 \cf8         \{
+\f1 \cf0 \
+
+\f0 \cf8             \cf11 getline\cf8 (file, line);
+\f1 \cf0 \
+
+\f0 \cf8             output.\cf11 append\cf8 (line + \cf5 "\\n"\cf8 );
+\f1 \cf0 \
+
+\f0 \cf8         \}
+\f1 \cf0 \
+
+\f0 \cf8     \}
+\f1 \cf0 \
+
+\f0 \cf8     \cf7 else
+\f1 \cf0 \
+
+\f0 \cf8     \{
+\f1 \cf0 \
+
+\f0 \cf8         \cf11 std\cf8 ::\cf11 cerr\cf8  << \cf5 "Unable to load shader: "\cf8  << fileName << \cf11 std\cf8 ::\cf11 endl\cf8 ;
+\f1 \cf0 \
+
+\f0 \cf8     \}
+\f1 \cf0 \
+
+\f0 \cf8     
+\f1 \cf0 \
+
+\f0 \cf8     \cf7 return\cf8  output;
+\f1 \cf0 \
+
+\f0 \cf8 \}
+\f1 \cf0 \
+\
+
+\f0 \cf2 /*
+\f1 \cf0 \
+
+\f0 \cf2  Method to create shader.
+\f1 \cf0 \
+
+\f0 \cf2  Returns: GLuint shader
+\f1 \cf0 \
+
+\f0 \cf2     Returns the unsigned int which reffers to the shader created
+\f1 \cf0 \
+
+\f0 \cf2  */
+\f1 \cf0 \
+
+\f0 \cf9 GLuint\cf8  \cf9 Shader\cf8 ::CreateShader(\cf7 const\cf8  \cf11 std\cf8 ::\cf11 string\cf8  &text, \cf7 unsigned\cf8  \cf7 int\cf8  type)\{
+\f1 \cf0 \
+
+\f0 \cf8     
+\f1 \cf0 \
+
+\f0 \cf8     \cf9 GLuint\cf8  shader = \cf4 glCreateShader\cf8 (type);
+\f1 \cf0 \
+
+\f0 \cf8     
+\f1 \cf0 \
+
+\f0 \cf8     \cf7 if\cf8 (shader ==\cf10 0\cf8 )\{
+\f1 \cf0 \
+
+\f0 \cf8         \cf11 std\cf8 ::\cf11 cerr\cf8  << \cf5 "Error compiling shader type "\cf8  << type << \cf11 std\cf8 ::\cf11 endl\cf8 ;
+\f1 \cf0 \
+
+\f0 \cf8     \}
+\f1 \cf0 \
+
+\f0 \cf8     
+\f1 \cf0 \
+
+\f0 \cf8     \cf7 const\cf8  \cf9 GLchar\cf8 * p[\cf10 1\cf8 ];
+\f1 \cf0 \
+
+\f0 \cf8     p[\cf10 0\cf8 ] = text.\cf11 c_str\cf8 (); \cf2 //convert the shader string from a C++ string to a C string
+\f1 \cf0 \
+
+\f0 \cf8     \cf9 GLint\cf8  lengths[\cf10 1\cf8 ];
+\f1 \cf0 \
+
+\f0 \cf8     lengths[\cf10 0\cf8 ] = text.\cf11 length\cf8 ();
+\f1 \cf0 \
+\
+
+\f0 \cf8     \cf4 glShaderSource\cf8 (shader, \cf10 1\cf8 , p, lengths);
+\f1 \cf0 \
+
+\f0 \cf8     \cf4 glCompileShader\cf8 (shader); \cf2 //complies shader, only need once every time you run the program
+\f1 \cf0 \
+
+\f0 \cf8     
+\f1 \cf0 \
+
+\f0 \cf8     \cf9 CheckShaderError\cf8 (shader, \cf4 GL_COMPILE_STATUS\cf8 , \cf7 false\cf8 , \cf5 "Error compiling shader!"\cf8 );
+\f1 \cf0 \
+
+\f0 \cf8     \cf7 return\cf8  shader;
+\f1 \cf0 \
+
+\f0 \cf8 \}
+\f1 \cf0 \
+\
+\
+
+\f0 \cf2 /*
+\f1 \cf0 \
+
+\f0 \cf2     The most important method in this class.
+\f1 \cf0 \
+
+\f0 \cf2     Must be called everytime in the main while loop.
+\f1 \cf0 \
+
+\f0 \cf2  */
+\f1 \cf0 \
+
+\f0 \cf7 void\cf8  \cf9 Shader\cf8 ::Bind()\{
+\f1 \cf0 \
+
+\f0 \cf8     \cf4 glUseProgram\cf8 (\cf9 ID\cf8 );
+\f1 \cf0 \
+
+\f0 \cf8 \}
+\f1 \cf0 \
+\
+
+\f0 \cf2 /*
+\f1 \cf0 \
+
+\f0 \cf2  Debugger
+\f1 \cf0 \
+
+\f0 \cf2  */
+\f1 \cf0 \
+
+\f0 \cf7 void\cf8  \cf9 Shader\cf8 ::CheckShaderError(\cf9 GLuint\cf8  shader, \cf9 GLuint\cf8  flag, \cf7 bool\cf8  isProgram, \cf7 const\cf8  \cf11 std\cf8 ::\cf11 string\cf8 & errorMessage)
+\f1 \cf0 \
+
+\f0 \cf8 \{
+\f1 \cf0 \
+
+\f0 \cf8     \cf9 GLint\cf8  success = \cf10 0\cf8 ;
+\f1 \cf0 \
+
+\f0 \cf8     \cf9 GLchar\cf8  error[\cf10 1024\cf8 ] = \{ \cf10 0\cf8  \};
+\f1 \cf0 \
+
+\f0 \cf8     
+\f1 \cf0 \
+
+\f0 \cf8     \cf7 if\cf8 (isProgram)
+\f1 \cf0 \
+
+\f0 \cf8         \cf4 glGetProgramiv\cf8 (shader, flag, &success);
+\f1 \cf0 \
+
+\f0 \cf8     \cf7 else
+\f1 \cf0 \
+
+\f0 \cf8         \cf4 glGetShaderiv\cf8 (shader, flag, &success);
+\f1 \cf0 \
+
+\f0 \cf8     
+\f1 \cf0 \
+
+\f0 \cf8     \cf7 if\cf8 (success == \cf4 GL_FALSE\cf8 )
+\f1 \cf0 \
+
+\f0 \cf8     \{
+\f1 \cf0 \
+
+\f0 \cf8         \cf7 if\cf8 (isProgram)
+\f1 \cf0 \
+
+\f0 \cf8             \cf4 glGetProgramInfoLog\cf8 (shader, \cf7 sizeof\cf8 (error), \cf7 NULL\cf8 , error);
+\f1 \cf0 \
+
+\f0 \cf8         \cf7 else
+\f1 \cf0 \
+
+\f0 \cf8             \cf4 glGetShaderInfoLog\cf8 (shader, \cf7 sizeof\cf8 (error), \cf7 NULL\cf8 , error);
+\f1 \cf0 \
+
+\f0 \cf8         
+\f1 \cf0 \
+
+\f0 \cf8         \cf11 std\cf8 ::\cf11 cerr\cf8  << errorMessage << \cf5 ": '"\cf8  << error << \cf5 "'"\cf8  << \cf11 std\cf8 ::\cf11 endl\cf8 ;
+\f1 \cf0 \
+
+\f0 \cf8     \}
+\f1 \cf0 \
+
+\f0 \cf8 \}
+\f1 \cf0 \
+\
+
+\f0 \cf2 /*
+\f1 \cf0 \
+
+\f0 \cf2  Destructor
+\f1 \cf0 \
+
+\f0 \cf2  */
+\f1 \cf0 \
+
+\f0 \cf9 Shader\cf8 ::~Shader()\{
+\f1 \cf0 \
+
+\f0 \cf8     \cf7 for\cf8 (\cf7 unsigned\cf8  \cf7 int\cf8  i = \cf10 0\cf8 ; i < \cf9 NUM_SHADERS\cf8 ; i++)
+\f1 \cf0 \
+
+\f0 \cf8     \{
+\f1 \cf0 \
+
+\f0 \cf8         \cf4 glDetachShader\cf8 (\cf9 ID\cf8 , \cf9 shaders\cf8 [i]);
+\f1 \cf0 \
+
+\f0 \cf8         \cf4 glDeleteShader\cf8 (\cf9 shaders\cf8 [i]);
+\f1 \cf0 \
+
+\f0 \cf8     \}
+\f1 \cf0 \
+
+\f0 \cf8     \cf4 glDeleteProgram\cf8 (\cf9 ID\cf8 );
+\f1 \cf0 \
+
+\f0 \cf8 \}
+\f1 \cf0 \
+\
+\
+
+\f0 \cf2 //
+\f1 \cf0 \
+
+\f0 \cf2 //  Shader.hpp
+\f1 \cf0 \
+
+\f0 \cf2 //  OpenGL trial
+\f1 \cf0 \
+
+\f0 \cf2 //
+\f1 \cf0 \
+
+\f0 \cf2 //  Created by Rashid on 10/5/18.
+\f1 \cf0 \
+
+\f0 \cf2 //  \cf12 \cb3 https://github.com/BennyQBD/ModernOpenGLTutorial
+\f1 \cf0 \cb3 \
+
+\f0 \cf2 //  Copyright \'a9 2018 Rashid. All rights reserved.
+\f1 \cf0 \
+
+\f0 \cf2 //
+\f1 \cf0 \
+\
+
+\f0 \cf4 #ifndef Shader_hpp
+\f1 \cf0 \
+
+\f0 \cf4 #define Shader_hpp
+\f1 \cf0 \
+\
+
+\f0 \cf4 #include \cf5 <stdio.h>
+\f1 \cf0 \
+
+\f0 \cf4 #include \cf5 <string>
+\f1 \cf0 \
+
+\f0 \cf4 #include \cf5 <GL/glew.h>
+\f1 \cf0 \
+\
+
+\f0 \cf7 class\cf8  Shader\{
+\f1 \cf0 \
+
+\f0 \cf7 public\cf8 :
+\f1 \cf0 \
+
+\f0 \cf8     Shader(\cf7 const\cf8  \cf11 std\cf8 ::\cf11 string\cf8 & filename);\cf2 //the filename containing the VS and FS
+\f1 \cf0 \
+
+\f0 \cf8     \cf7 void\cf8  Bind(); \cf2 //Sets the GPU to use the Fragment shader and Vertex shader assinged to this class
+\f1 \cf0 \
+
+\f0 \cf8     \cf7 virtual\cf8  ~Shader();
+\f1 \cf0 \
+
+\f0 \cf8     \cf9 GLuint\cf8  ID; \cf2 //Variable that refers to the SHADER PROGRAM
+\f1 \cf0 \
+
+\f0 \cf8     
+\f1 \cf0 \
+
+\f0 \cf8     \cf7 void\cf8  setInt(\cf7 const\cf8  \cf11 std\cf8 ::\cf11 string\cf8  &name, \cf7 int\cf8  value) \cf7 const
+\f1 \cf0 \
+
+\f0 \cf8     \{
+\f1 \cf0 \
+
+\f0 \cf8         \cf4 glUniform1i\cf8 (\cf4 glGetUniformLocation\cf8 (\cf9 ID\cf8 , name.\cf11 c_str\cf8 ()), value);
+\f1 \cf0 \
+
+\f0 \cf8     \}
+\f1 \cf0 \
+
+\f0 \cf8     
+\f1 \cf0 \
+
+\f0 \cf7 private\cf8 :
+\f1 \cf0 \
+
+\f0 \cf8     \cf7 static\cf8  \cf7 const\cf8  \cf7 unsigned\cf8  \cf7 int\cf8  NUM_SHADERS = \cf10 2\cf8 ; \cf2 //Vertex shader, fragment shader and geometry shader
+\f1 \cf0 \
+
+\f0 \cf8     \cf2 //Shader(const Shader& other)\{\}
+\f1 \cf0 \
+
+\f0 \cf8     \cf7 void\cf8  \cf7 operator\cf8  =(\cf7 const\cf8  \cf9 Shader\cf8 & other)\{\} \cf2 //overloading the = operand, in CPP file this will take in a pointer for a shader and do some comparison
+\f1 \cf0 \
+
+\f0 \cf8     
+\f1 \cf0 \
+
+\f0 \cf8     \cf11 std\cf8 ::\cf11 string\cf8  LoadShader(\cf7 const\cf8  \cf11 std\cf8 ::\cf11 string\cf8 & file);
+\f1 \cf0 \
+
+\f0 \cf8     \cf7 void\cf8  CheckShaderError(\cf9 GLuint\cf8  shader, \cf9 GLuint\cf8  flag, \cf7 bool\cf8  isProgram, \cf7 const\cf8  \cf11 std\cf8 ::\cf11 string\cf8 & errorMessage);
+\f1 \cf0 \
+
+\f0 \cf8     \cf9 GLuint\cf8  CreateShader(\cf7 const\cf8  \cf11 std\cf8 ::\cf11 string\cf8 & text, \cf7 unsigned\cf8  \cf7 int\cf8  type);
+\f1 \cf0 \
+
+\f0 \cf8     
+\f1 \cf0 \
+
+\f0 \cf8     \cf9 GLuint\cf8  shaders[\cf9 NUM_SHADERS\cf8 ];\cf2 //makes an array to store the shader ints
+\f1 \cf0 \
+
+\f0 \cf8 \};
+\f1 \cf0 \
+
+\f0 \cf4 #endif \cf2 /* Shader_hpp */
+\f1 \cf0 \
+\
+
+\f0 \cf2 //
+\f1 \cf0 \
+
+\f0 \cf2 //  Model.cpp
+\f1 \cf0 \
+
+\f0 \cf2 //  OpenGL trial
+\f1 \cf0 \
+
+\f0 \cf2 //
+\f1 \cf0 \
+
+\f0 \cf2 //  Created by Rashid on 11/6/18.
+\f1 \cf0 \
+
+\f0 \cf2 //  Copyright \'a9 2018 Rashid. All rights reserved.
+\f1 \cf0 \
+
+\f0 \cf2 //
+\f1 \cf0 \
+\
+
+\f0 \cf4 #include \cf5 "Model.hpp"
+\f1 \cf0 \
+
+\f0 \cf4 #include \cf5 "mesh.hpp"
+\f1 \cf0 \
+\
+
+\f0 \cf4 #define STB_IMAGE_IMPLEMENTATION
+\f1 \cf0 \
+\
+
+\f0 \cf4 #include \cf5 "stb_image.h"
+\f1 \cf0 \
+\
+
+\f0 \cf2 /*  Functions   */
+\f1 \cf0 \
+
+\f0 \cf2 // constructor, expects a filepath to a 3D model.
+\f1 \cf0 \
+
+\f0 \cf9 Model\cf8 ::Model(\cf11 string\cf8  \cf7 const\cf8  &path)
+\f1 \cf0 \
+
+\f0 \cf8 \{
+\f1 \cf0 \
+
+\f0 \cf8     \cf9 loadModel\cf8 (path);
+\f1 \cf0 \
+
+\f0 \cf8 \}
+\f1 \cf0 \
+\
+
+\f0 \cf7 void\cf8  \cf9 Model\cf8 ::loadModel(\cf11 string\cf8  \cf7 const\cf8  &path)\{
+\f1 \cf0 \
+
+\f0 \cf8     \cf2 // read file via ASSIMP
+\f1 \cf0 \
+
+\f0 \cf8     \cf9 Assimp\cf8 ::\cf9 Importer\cf8  importer;
+\f1 \cf0 \
+
+\f0 \cf8     \cf7 const\cf8  \cf9 aiScene\cf8 * scene = importer.\cf9 ReadFile\cf8 (path, \cf9 aiProcess_Triangulate\cf8  | \cf9 aiProcess_FlipUVs\cf8  | \cf9 aiProcess_CalcTangentSpace\cf8  | \cf9 aiProcess_GenNormals\cf8  );
+\f1 \cf0 \
+
+\f0 \cf8     \cf2 // check for errors
+\f1 \cf0 \
+
+\f0 \cf8     \cf7 if\cf8 (!scene || scene->\cf9 mFlags\cf8  & \cf4 AI_SCENE_FLAGS_INCOMPLETE\cf8  || !scene->\cf9 mRootNode\cf8 ) \cf2 // if is Not Zero
+\f1 \cf0 \
+
+\f0 \cf8     \{
+\f1 \cf0 \
+
+\f0 \cf8         \cf11 cout\cf8  << \cf5 "ERROR::ASSIMP:: "\cf8  << importer.\cf9 GetErrorString\cf8 () << \cf11 endl\cf8 ;
+\f1 \cf0 \
+
+\f0 \cf8         \cf7 return\cf8 ;
+\f1 \cf0 \
+
+\f0 \cf8     \}
+\f1 \cf0 \
+
+\f0 \cf8     \cf2 // retrieve the directory path of the filepath
+\f1 \cf0 \
+
+\f0 \cf8     \cf9 directory\cf8  = path.\cf11 substr\cf8 (\cf10 0\cf8 , path.\cf11 find_last_of\cf8 (\cf10 '/'\cf8 ));
+\f1 \cf0 \
+
+\f0 \cf8     
+\f1 \cf0 \
+
+\f0 \cf8     \cf9 processNode\cf8 (scene->\cf9 mRootNode\cf8 , scene);
+\f1 \cf0 \
+
+\f0 \cf8 \}
+\f1 \cf0 \
+\
+
+\f0 \cf7 void\cf8  \cf9 Model\cf8 ::Draw(\cf9 GLuint\cf8  ID)\{
+\f1 \cf0 \
+
+\f0 \cf8     
+\f1 \cf0 \
+
+\f0 \cf8     \cf7 for\cf8 (\cf7 unsigned\cf8  \cf7 int\cf8  i = \cf10 0\cf8 ; i < \cf9 meshes\cf8 .\cf11 size\cf8 (); i++)
+\f1 \cf0 \
+
+\f0 \cf8         \cf9 meshes\cf8 [\cf11 i\cf8 ].\cf9 Draw\cf8 (ID);
+\f1 \cf0 \
+
+\f0 \cf8 \}
+\f1 \cf0 \
+\
+
+\f0 \cf7 void\cf8  \cf9 Model\cf8 ::processNode(\cf9 aiNode\cf8  *node, \cf7 const\cf8  \cf9 aiScene\cf8  *scene)\{
+\f1 \cf0 \
+
+\f0 \cf8     \cf2 // process each mesh located at the current node
+\f1 \cf0 \
+
+\f0 \cf8     \cf7 for\cf8 (\cf7 unsigned\cf8  \cf7 int\cf8  i = \cf10 0\cf8 ; i < node->\cf9 mNumMeshes\cf8 ; i++)
+\f1 \cf0 \
+
+\f0 \cf8     \{
+\f1 \cf0 \
+
+\f0 \cf8         
+\f1 \cf0 \
+
+\f0 \cf8         \cf2 // the scene contains all the data, node is just to keep stuff organized (like relations between nodes).
+\f1 \cf0 \
+
+\f0 \cf8         \cf9 aiMesh\cf8 * mesh = scene->\cf9 mMeshes\cf8 [node->\cf9 mMeshes\cf8 [i]];
+\f1 \cf0 \
+
+\f0 \cf8         
+\f1 \cf0 \
+
+\f0 \cf8         \cf9 meshes\cf8 .\cf11 push_back\cf8 (\cf9 processMesh\cf8 (mesh, scene)); \cf2 //Add the saved mesh to the array
+\f1 \cf0 \
+
+\f0 \cf8     \}
+\f1 \cf0 \
+
+\f0 \cf8     \cf2 // after we've processed all of the meshes (if any) we then recursively process each of the children nodes
+\f1 \cf0 \
+
+\f0 \cf8     \cf7 for\cf8 (\cf7 unsigned\cf8  \cf7 int\cf8  i = \cf10 0\cf8 ; i < node->\cf9 mNumChildren\cf8 ; i++)
+\f1 \cf0 \
+
+\f0 \cf8     \{
+\f1 \cf0 \
+
+\f0 \cf8         \cf9 processNode\cf8 (node->\cf9 mChildren\cf8 [i], scene);
+\f1 \cf0 \
+
+\f0 \cf8     \}
+\f1 \cf0 \
+\
+
+\f0 \cf8 \}
+\f1 \cf0 \
+\
+
+\f0 \cf9 Mesh\cf8  \cf9 Model\cf8 ::processMesh(\cf9 aiMesh\cf8  *mesh, \cf7 const\cf8  \cf9 aiScene\cf8  *scene)\{
+\f1 \cf0 \
+
+\f0 \cf8     
+\f1 \cf0 \
+
+\f0 \cf8     \cf2 // data to fill
+\f1 \cf0 \
+
+\f0 \cf8     \cf11 vector\cf8 <\cf9 Vertex\cf8 > vertices;
+\f1 \cf0 \
+
+\f0 \cf8     \cf11 vector\cf8 <\cf7 unsigned\cf8  \cf7 int\cf8 > indices;
+\f1 \cf0 \
+
+\f0 \cf8     \cf11 vector\cf8 <\cf9 Texture\cf8 > textures;
+\f1 \cf0 \
+
+\f0 \cf8     
+\f1 \cf0 \
+
+\f0 \cf8     \cf2 // Walk through each of the mesh's vertices
+\f1 \cf0 \
+
+\f0 \cf8     \cf7 for\cf8 (\cf7 unsigned\cf8  \cf7 int\cf8  i = \cf10 0\cf8 ; i < mesh->\cf9 mNumVertices\cf8 ; i++)
+\f1 \cf0 \
+
+\f0 \cf8     \{
+\f1 \cf0 \
+
+\f0 \cf8         \cf9 Vertex\cf8  vertex;
+\f1 \cf0 \
+
+\f0 \cf8         \cf9 glm\cf8 ::\cf9 vec3\cf8  vector; \cf2 // we declare a placeholder vector since assimp uses its own vector class that doesn't directly convert to glm's vec3 class so we transfer the data to this placeholder glm::vec3 first.
+\f1 \cf0 \
+
+\f0 \cf8         \cf2 // positions
+\f1 \cf0 \
+
+\f0 \cf8         vector.x = mesh->\cf9 mVertices\cf8 [i].\cf9 x\cf8 ;
+\f1 \cf0 \
+
+\f0 \cf8         vector.y = mesh->\cf9 mVertices\cf8 [i].\cf9 y\cf8 ;
+\f1 \cf0 \
+
+\f0 \cf8         vector.z = mesh->\cf9 mVertices\cf8 [i].\cf9 z\cf8 ;
+\f1 \cf0 \
+
+\f0 \cf8         vertex.\cf9 pos\cf8  = vector;
+\f1 \cf0 \
+
+\f0 \cf8         \cf2 // normals
+\f1 \cf0 \
+
+\f0 \cf8         vector.x = mesh->\cf9 mNormals\cf8 [i].\cf9 x\cf8 ;
+\f1 \cf0 \
+
+\f0 \cf8         vector.y = mesh->\cf9 mNormals\cf8 [i].\cf9 y\cf8 ;
+\f1 \cf0 \
+
+\f0 \cf8         vector.z = mesh->\cf9 mNormals\cf8 [i].\cf9 z\cf8 ;
+\f1 \cf0 \
+
+\f0 \cf8         vertex.\cf9 normal\cf8  = vector;
+\f1 \cf0 \
+
+\f0 \cf8         \cf2 // texture coordinates
+\f1 \cf0 \
+
+\f0 \cf8         \cf7 if\cf8 (mesh->\cf9 mTextureCoords\cf8 [\cf10 0\cf8 ]) \cf2 // does the mesh contain texture coordinates?
+\f1 \cf0 \
+
+\f0 \cf8         \{
+\f1 \cf0 \
+
+\f0 \cf8             \cf9 glm\cf8 ::\cf9 vec2\cf8  vec;
+\f1 \cf0 \
+
+\f0 \cf8             \cf2 // a vertex can contain up to 8 different texture coordinates. We thus make the assumption that we won't
+\f1 \cf0 \
+
+\f0 \cf8             \cf2 // use models where a vertex can have multiple texture coordinates so we always take the first set (0).
+\f1 \cf0 \
+
+\f0 \cf8             vec.x = mesh->\cf9 mTextureCoords\cf8 [\cf10 0\cf8 ][i].\cf9 x\cf8 ;
+\f1 \cf0 \
+
+\f0 \cf8             vec.y = mesh->\cf9 mTextureCoords\cf8 [\cf10 0\cf8 ][i].\cf9 y\cf8 ;
+\f1 \cf0 \
+
+\f0 \cf8             vertex.\cf9 texCoord\cf8  = vec;
+\f1 \cf0 \
+
+\f0 \cf8         \}
+\f1 \cf0 \
+
+\f0 \cf8         \cf7 else
+\f1 \cf0 \
+
+\f0 \cf8             vertex.\cf9 texCoord\cf8  = \cf9 glm\cf8 ::\cf9 vec2\cf8 (\cf10 0.0f\cf8 , \cf10 0.0f\cf8 );
+\f1 \cf0 \
+
+\f0 \cf8         \cf2 // tangent
+\f1 \cf0 \
+
+\f0 \cf8         vector.x = mesh->\cf9 mTangents\cf8 [i].\cf9 x\cf8 ;
+\f1 \cf0 \
+
+\f0 \cf8         vector.y = mesh->\cf9 mTangents\cf8 [i].\cf9 y\cf8 ;
+\f1 \cf0 \
+
+\f0 \cf8         vector.z = mesh->\cf9 mTangents\cf8 [i].\cf9 z\cf8 ;
+\f1 \cf0 \
+
+\f0 \cf8         vertex.\cf9 tangent\cf8  = vector;
+\f1 \cf0 \
+
+\f0 \cf8         \cf2 // bitangent
+\f1 \cf0 \
+
+\f0 \cf8         vector.x = mesh->\cf9 mBitangents\cf8 [i].\cf9 x\cf8 ;
+\f1 \cf0 \
+
+\f0 \cf8         vector.y = mesh->\cf9 mBitangents\cf8 [i].\cf9 y\cf8 ;
+\f1 \cf0 \
+
+\f0 \cf8         vector.z = mesh->\cf9 mBitangents\cf8 [i].\cf9 z\cf8 ;
+\f1 \cf0 \
+
+\f0 \cf8         vertex.\cf9 Bitangent\cf8  = vector;
+\f1 \cf0 \
+
+\f0 \cf8         vertices.\cf11 push_back\cf8 (vertex);
+\f1 \cf0 \
+
+\f0 \cf8     \}
+\f1 \cf0 \
+
+\f0 \cf8     \cf2 // now wak through each of the mesh's faces (a face is a mesh its triangle) and retrieve the corresponding vertex indices.
+\f1 \cf0 \
+
+\f0 \cf8     \cf7 for\cf8 (\cf7 unsigned\cf8  \cf7 int\cf8  i = \cf10 0\cf8 ; i < mesh->\cf9 mNumFaces\cf8 ; i++)
+\f1 \cf0 \
+
+\f0 \cf8     \{
+\f1 \cf0 \
+
+\f0 \cf8         \cf9 aiFace\cf8  face = mesh->\cf9 mFaces\cf8 [i];
+\f1 \cf0 \
+
+\f0 \cf8         \cf2 // retrieve all indices of the face and store them in the indices vector
+\f1 \cf0 \
+
+\f0 \cf8         \cf7 for\cf8 (\cf7 unsigned\cf8  \cf7 int\cf8  j = \cf10 0\cf8 ; j < face.\cf9 mNumIndices\cf8 ; j++)
+\f1 \cf0 \
+
+\f0 \cf8             indices.\cf11 push_back\cf8 (face.\cf9 mIndices\cf8 [j]);
+\f1 \cf0 \
+
+\f0 \cf8     \}
+\f1 \cf0 \
+
+\f0 \cf8     \cf2 // process materials
+\f1 \cf0 \
+
+\f0 \cf8     \cf9 aiMaterial\cf8 * material = scene->\cf9 mMaterials\cf8 [mesh->\cf9 mMaterialIndex\cf8 ];
+\f1 \cf0 \
+
+\f0 \cf8     \cf2 // we assume a convention for sampler names in the shaders. Each diffuse texture should be named
+\f1 \cf0 \
+
+\f0 \cf8     \cf2 // as 'texture_diffuseN' where N is a sequential number ranging from 1 to MAX_SAMPLER_NUMBER.
+\f1 \cf0 \
+
+\f0 \cf8     \cf2 // Same applies to other texture as the following list summarizes:
+\f1 \cf0 \
+
+\f0 \cf8     \cf2 // diffuse: texture_diffuseN
+\f1 \cf0 \
+
+\f0 \cf8     \cf2 // specular: texture_specularN
+\f1 \cf0 \
+
+\f0 \cf8     \cf2 // normal: texture_normalN
+\f1 \cf0 \
+
+\f0 \cf8     
+\f1 \cf0 \
+
+\f0 \cf8     \cf2 // 1. diffuse maps
+\f1 \cf0 \
+
+\f0 \cf8     \cf11 vector\cf8 <\cf9 Texture\cf8 > diffuseMaps = \cf9 loadMaterialTextures\cf8 (material, \cf9 aiTextureType_DIFFUSE\cf8 , \cf5 "texture_diffuse"\cf8 );
+\f1 \cf0 \
+
+\f0 \cf8     textures.\cf11 insert\cf8 (textures.\cf11 end\cf8 (), diffuseMaps.\cf11 begin\cf8 (), diffuseMaps.\cf11 end\cf8 ());
+\f1 \cf0 \
+
+\f0 \cf8     \cf2 // 2. specular maps
+\f1 \cf0 \
+
+\f0 \cf8     \cf11 vector\cf8 <\cf9 Texture\cf8 > specularMaps = \cf9 loadMaterialTextures\cf8 (material, \cf9 aiTextureType_SPECULAR\cf8 , \cf5 "texture_specular"\cf8 );
+\f1 \cf0 \
+
+\f0 \cf8     textures.\cf11 insert\cf8 (textures.\cf11 end\cf8 (), specularMaps.\cf11 begin\cf8 (), specularMaps.\cf11 end\cf8 ());
+\f1 \cf0 \
+
+\f0 \cf8     \cf2 // 3. normal maps
+\f1 \cf0 \
+
+\f0 \cf8     \cf11 std\cf8 ::\cf11 vector\cf8 <\cf9 Texture\cf8 > normalMaps = \cf9 loadMaterialTextures\cf8 (material, \cf9 aiTextureType_HEIGHT\cf8 , \cf5 "texture_normal"\cf8 );
+\f1 \cf0 \
+
+\f0 \cf8     textures.\cf11 insert\cf8 (textures.\cf11 end\cf8 (), normalMaps.\cf11 begin\cf8 (), normalMaps.\cf11 end\cf8 ());
+\f1 \cf0 \
+
+\f0 \cf8     \cf2 // 4. height maps
+\f1 \cf0 \
+
+\f0 \cf8     \cf11 std\cf8 ::\cf11 vector\cf8 <\cf9 Texture\cf8 > heightMaps = \cf9 loadMaterialTextures\cf8 (material, \cf9 aiTextureType_AMBIENT\cf8 , \cf5 "texture_height"\cf8 );
+\f1 \cf0 \
+
+\f0 \cf8     textures.\cf11 insert\cf8 (textures.\cf11 end\cf8 (), heightMaps.\cf11 begin\cf8 (), heightMaps.\cf11 end\cf8 ());
+\f1 \cf0 \
+
+\f0 \cf8     
+\f1 \cf0 \
+
+\f0 \cf8     
+\f1 \cf0 \
+
+\f0 \cf8     \cf7 return\cf8  \cf9 Mesh\cf8 (vertices, indices, textures); \cf2 //executes the constructor of MESH and returns that shit
+\f1 \cf0 \
+
+\f0 \cf8 \}
+\f1 \cf0 \
+\
+
+\f0 \cf11 vector\cf8 <\cf9 Texture\cf8 > \cf9 Model\cf8 ::loadMaterialTextures(\cf9 aiMaterial\cf8  *mat, \cf9 aiTextureType\cf8  type, \cf11 string\cf8  typeName)\{
+\f1 \cf0 \
+
+\f0 \cf8     
+\f1 \cf0 \
+
+\f0 \cf8     \cf11 vector\cf8 <\cf9 Texture\cf8 > textures;
+\f1 \cf0 \
+
+\f0 \cf8     \cf7 for\cf8 (\cf7 unsigned\cf8  \cf7 int\cf8  i = \cf10 0\cf8 ; i < mat->\cf9 GetTextureCount\cf8 (type); i++)
+\f1 \cf0 \
+
+\f0 \cf8     \{
+\f1 \cf0 \
+
+\f0 \cf8         \cf9 aiString\cf8  str;
+\f1 \cf0 \
+
+\f0 \cf8         mat->\cf9 GetTexture\cf8 (type, i, &str);
+\f1 \cf0 \
+
+\f0 \cf8         \cf2 // check if texture was loaded before and if so, continue to next iteration: skip loading a new texture
+\f1 \cf0 \
+
+\f0 \cf8         \cf7 bool\cf8  skip = \cf7 false\cf8 ;
+\f1 \cf0 \
+
+\f0 \cf8         \cf7 for\cf8 (\cf7 unsigned\cf8  \cf7 int\cf8  j = \cf10 0\cf8 ; j < \cf9 textures_loaded\cf8 .\cf11 size\cf8 (); j++)
+\f1 \cf0 \
+
+\f0 \cf8         \{
+\f1 \cf0 \
+
+\f0 \cf8             \cf7 if\cf8 (\cf11 std\cf8 ::\cf11 strcmp\cf8 (\cf9 textures_loaded\cf8 [\cf11 j\cf8 ].\cf9 path\cf8 .\cf11 data\cf8 (), str.\cf9 C_Str\cf8 ()) == \cf10 0\cf8 )
+\f1 \cf0 \
+
+\f0 \cf8             \{
+\f1 \cf0 \
+
+\f0 \cf8                 textures.\cf11 push_back\cf8 (\cf9 textures_loaded\cf8 [\cf11 j\cf8 ]);
+\f1 \cf0 \
+
+\f0 \cf8                 skip = \cf7 true\cf8 ; \cf2 // a texture with the same filepath has already been loaded, continue to next one. (optimization)
+\f1 \cf0 \
+
+\f0 \cf8                 \cf7 break\cf8 ;
+\f1 \cf0 \
+
+\f0 \cf8             \}
+\f1 \cf0 \
+
+\f0 \cf8         \}
+\f1 \cf0 \
+
+\f0 \cf8         \cf7 if\cf8 (!skip)
+\f1 \cf0 \
+
+\f0 \cf8         \{   \cf2 // if texture hasn't been loaded already, load it
+\f1 \cf0 \
+
+\f0 \cf8             \cf9 Texture\cf8  texture;
+\f1 \cf0 \
+
+\f0 \cf8             texture.\cf9 tID\cf8  = \cf9 TextureFromFile\cf8 (str.\cf9 C_Str\cf8 (), \cf9 directory\cf8 );
+\f1 \cf0 \
+
+\f0 \cf8             texture.\cf9 type\cf8  = typeName;
+\f1 \cf0 \
+
+\f0 \cf8             texture.\cf9 path\cf8  = str.\cf9 C_Str\cf8 ();
+\f1 \cf0 \
+
+\f0 \cf8             textures.\cf11 push_back\cf8 (texture);
+\f1 \cf0 \
+
+\f0 \cf8             \cf9 textures_loaded\cf8 .\cf11 push_back\cf8 (texture);  \cf2 // store it as texture loaded for entire model, to ensure we won't unnecesery load duplicate textures.
+\f1 \cf0 \
+
+\f0 \cf8         \}
+\f1 \cf0 \
+
+\f0 \cf8     \}
+\f1 \cf0 \
+
+\f0 \cf8     \cf7 return\cf8  textures;
+\f1 \cf0 \
+
+\f0 \cf8 \}
+\f1 \cf0 \
+\
+
+\f0 \cf2 //I want to die -_-
+\f1 \cf0 \
+\
+
+\f0 \cf7 unsigned\cf8  \cf7 int\cf8  \cf9 Model\cf8 ::TextureFromFile(\cf7 const\cf8  \cf7 char\cf8  *path, \cf7 const\cf8  \cf11 string\cf8  &directory)\{
+\f1 \cf0 \
+
+\f0 \cf8    
+\f1 \cf0 \
+
+\f0 \cf8     \cf11 string\cf8  filename = \cf11 string\cf8 (path);
+\f1 \cf0 \
+
+\f0 \cf8     filename = directory + \cf10 '/'\cf8  + filename;
+\f1 \cf0 \
+
+\f0 \cf8     
+\f1 \cf0 \
+
+\f0 \cf8     \cf7 unsigned\cf8  \cf7 int\cf8  textureID;
+\f1 \cf0 \
+
+\f0 \cf8     \cf9 glGenTextures\cf8 (\cf10 1\cf8 , &textureID);
+\f1 \cf0 \
+
+\f0 \cf8     
+\f1 \cf0 \
+
+\f0 \cf8     \cf7 int\cf8  width, height, nrComponents;
+\f1 \cf0 \
+
+\f0 \cf8     \cf7 unsigned\cf8  \cf7 char\cf8  *data = \cf9 stbi_load\cf8 (filename.\cf11 c_str\cf8 (), &width, &height, &nrComponents, \cf10 0\cf8 );
+\f1 \cf0 \
+
+\f0 \cf8     \cf7 if\cf8  (data)
+\f1 \cf0 \
+
+\f0 \cf8     \{
+\f1 \cf0 \
+
+\f0 \cf8         \cf9 GLenum\cf8  format;
+\f1 \cf0 \
+
+\f0 \cf8         \cf7 if\cf8  (nrComponents == \cf10 1\cf8 )
+\f1 \cf0 \
+
+\f0 \cf8             format = \cf4 GL_RED\cf8 ;
+\f1 \cf0 \
+
+\f0 \cf8         \cf7 else\cf8  \cf7 if\cf8  (nrComponents == \cf10 3\cf8 )
+\f1 \cf0 \
+
+\f0 \cf8             format = \cf4 GL_RGB\cf8 ;
+\f1 \cf0 \
+
+\f0 \cf8         \cf7 else\cf8  \cf7 if\cf8  (nrComponents == \cf10 4\cf8 )
+\f1 \cf0 \
+
+\f0 \cf8             format = \cf4 GL_RGBA\cf8 ;
+\f1 \cf0 \
+
+\f0 \cf8         
+\f1 \cf0 \
+
+\f0 \cf8         \cf9 glBindTexture\cf8 (\cf4 GL_TEXTURE_2D\cf8 , textureID);
+\f1 \cf0 \
+
+\f0 \cf8         \cf9 glTexImage2D\cf8 (\cf4 GL_TEXTURE_2D\cf8 , \cf10 0\cf8 , format, width, height, \cf10 0\cf8 , format, \cf4 GL_UNSIGNED_BYTE\cf8 , data);
+\f1 \cf0 \
+
+\f0 \cf8         \cf4 glGenerateMipmap\cf8 (\cf4 GL_TEXTURE_2D\cf8 );
+\f1 \cf0 \
+
+\f0 \cf8         
+\f1 \cf0 \
+
+\f0 \cf8         \cf9 glTexParameteri\cf8 (\cf4 GL_TEXTURE_2D\cf8 , \cf4 GL_CLAMP_TO_EDGE\cf8 , \cf4 GL_REPEAT\cf8 ); \cf2 //original was GL_TEXTURE_WRAP_S instead of clamp to edge
+\f1 \cf0 \
+
+\f0 \cf8         \cf9 glTexParameteri\cf8 (\cf4 GL_TEXTURE_2D\cf8 , \cf4 GL_CLAMP_TO_EDGE\cf8 , \cf4 GL_REPEAT\cf8 );\cf2 //original was GL_TEXTURE_WRAP_T instead of clamp to edge
+\f1 \cf0 \
+
+\f0 \cf8         \cf9 glTexParameteri\cf8 (\cf4 GL_TEXTURE_2D\cf8 , \cf4 GL_TEXTURE_MIN_FILTER\cf8 , \cf4 GL_LINEAR_MIPMAP_LINEAR\cf8 );
+\f1 \cf0 \
+
+\f0 \cf8         \cf9 glTexParameteri\cf8 (\cf4 GL_TEXTURE_2D\cf8 , \cf4 GL_TEXTURE_MAG_FILTER\cf8 , \cf4 GL_LINEAR\cf8 );
+\f1 \cf0 \
+
+\f0 \cf8         
+\f1 \cf0 \
+
+\f0 \cf8         \cf9 stbi_image_free\cf8 (data);
+\f1 \cf0 \
+
+\f0 \cf8     \}
+\f1 \cf0 \
+
+\f0 \cf8     \cf7 else
+\f1 \cf0 \
+
+\f0 \cf8     \{
+\f1 \cf0 \
+
+\f0 \cf8         \cf11 std\cf8 ::\cf11 cout\cf8  << \cf5 "Texture failed to load at path: "\cf8  << path << \cf11 std\cf8 ::\cf11 endl\cf8 ;
+\f1 \cf0 \
+
+\f0 \cf8         \cf9 stbi_image_free\cf8 (data);
+\f1 \cf0 \
+
+\f0 \cf8     \}
+\f1 \cf0 \
+
+\f0 \cf8     
+\f1 \cf0 \
+
+\f0 \cf8     \cf7 return\cf8  textureID;
+\f1 \cf0 \
+
+\f0 \cf8     
+\f1 \cf0 \
+
+\f0 \cf8     \cf7 return\cf8  \cf10 0\cf8 ;
+\f1 \cf0 \
+
+\f0 \cf8 \}
+\f1 \cf0 \
+
+\f0 \cf2 //
+\f1 \cf0 \
+
+\f0 \cf2 //  Model.hpp
+\f1 \cf0 \
+
+\f0 \cf2 //  OpenGL trial
+\f1 \cf0 \
+
+\f0 \cf2 //
+\f1 \cf0 \
+
+\f0 \cf2 //  Created by Rashid on 11/6/18.
+\f1 \cf0 \
+
+\f0 \cf2 //  Copyright \'a9 2018 Rashid. All rights reserved.
+\f1 \cf0 \
+
+\f0 \cf2 //
+\f1 \cf0 \
+\
+
+\f0 \cf4 #ifndef Model_hpp
+\f1 \cf0 \
+
+\f0 \cf4 #define Model_hpp
+\f1 \cf0 \
+\
+
+\f0 \cf4 #include \cf5 <string>
+\f1 \cf0 \
+
+\f0 \cf4 #include \cf5 <fstream>
+\f1 \cf0 \
+
+\f0 \cf4 #include \cf5 <sstream>
+\f1 \cf0 \
+
+\f0 \cf4 #include \cf5 <iostream>
+\f1 \cf0 \
+
+\f0 \cf4 #include \cf5 <map>
+\f1 \cf0 \
+
+\f0 \cf4 #include \cf5 <vector>
+\f1 \cf0 \
+
+\f0 \cf4 #include \cf5 <stdio.h>
+\f1 \cf0 \
+\
+\
+
+\f0 \cf4 #include \cf5 "mesh.hpp"
+\f1 \cf0 \
+
+\f0 \cf4 #include \cf5 "Shader.hpp"
+\f1 \cf0 \
+\
+\
+
+\f0 \cf4 #include \cf5 <glm.hpp>
+\f1 \cf0 \
+
+\f0 \cf4 #include \cf5 <gtc/matrix_transform.hpp>
+\f1 \cf0 \
+\
+
+\f0 \cf4 #include \cf5 <assimp/Importer.hpp>
+\f1 \cf0 \
+
+\f0 \cf4 #include \cf5 <assimp/scene.h>
+\f1 \cf0 \
+
+\f0 \cf4 #include \cf5 <assimp/postprocess.h>
+\f1 \cf0 \
+\
+
+\f0 \cf7 using\cf8  \cf7 namespace\cf8  \cf11 std\cf8 ;
+\f1 \cf0 \
+\
+
+\f0 \cf7 class\cf8  Model\{
+\f1 \cf0 \
+
+\f0 \cf7 public\cf8 :
+\f1 \cf0 \
+
+\f0 \cf8     
+\f1 \cf0 \
+
+\f0 \cf8     Model(\cf11 string\cf8  \cf7 const\cf8  &path);
+\f1 \cf0 \
+
+\f0 \cf8     \cf7 void\cf8  Draw(\cf9 GLuint\cf8  shader);
+\f1 \cf0 \
+
+\f0 \cf8     
+\f1 \cf0 \
+
+\f0 \cf8     \cf7 unsigned\cf8  \cf7 int\cf8  TextureFromFile(\cf7 const\cf8  \cf7 char\cf8  *path, \cf7 const\cf8  \cf11 string\cf8  &directory);
+\f1 \cf0 \
+
+\f0 \cf8     
+\f1 \cf0 \
+
+\f0 \cf8     
+\f1 \cf0 \
+
+\f0 \cf7 private\cf8 :
+\f1 \cf0 \
+
+\f0 \cf8     
+\f1 \cf0 \
+
+\f0 \cf8     \cf11 vector\cf8 <\cf9 Texture\cf8 > textures_loaded;    \cf2 // stores all the textures loaded so far, optimization to make sure textures aren't loaded more than once.
+\f1 \cf0 \
+
+\f0 \cf8     \cf11 vector\cf8 <\cf9 Mesh\cf8 > meshes;
+\f1 \cf0 \
+
+\f0 \cf8     \cf11 string\cf8  directory;
+\f1 \cf0 \
+
+\f0 \cf8     
+\f1 \cf0 \
+
+\f0 \cf8     \cf7 void\cf8  loadModel(\cf11 string\cf8  \cf7 const\cf8  &path);
+\f1 \cf0 \
+
+\f0 \cf8     \cf7 void\cf8  processNode(\cf9 aiNode\cf8  *node, \cf7 const\cf8  \cf9 aiScene\cf8  *scene);
+\f1 \cf0 \
+
+\f0 \cf8     \cf9 Mesh\cf8  processMesh(\cf9 aiMesh\cf8  *mesh, \cf7 const\cf8  \cf9 aiScene\cf8  *scene);
+\f1 \cf0 \
+
+\f0 \cf8     \cf11 vector\cf8 <\cf9 Texture\cf8 > loadMaterialTextures(\cf9 aiMaterial\cf8  *mat, \cf9 aiTextureType\cf8  type, \cf11 string\cf8  typeName);
+\f1 \cf0 \
+
+\f0 \cf8 \};
+\f1 \cf0 \
+\
+
+\f0 \cf4 #endif \cf2 /* Model_hpp */
+\f1 \cf0 \
+\
+\
+
+\f2 \cf6 /**
+\f1 \cf0 \
+
+\f2 \cf6  This is a basic FPS implementation camera class.
+\f1 \cf0 \
+
+\f2 \cf6     The programmer sets the view of the world from a location set by the user when creating the constructor.
+\f1 \cf0 \
+
+\f2 \cf6     This class doesn't "create" the actual camera, it just contains the matrix which stores the position of the camera and
+\f1 \cf0 \
+
+\f2 \cf6     The class also mainly handles user input, such as mouse movement.
+\f1 \cf0 \
+
+\f2 \cf6  **/
+\f1 \cf0 \
+\
+
+\f0 \cf4 #include \cf5 "Camera.hpp"
+\f1 \cf0 \
+\
+
+\f0 \cf2 // Default camera values
+\f1 \cf0 \
+
+\f0 \cf7 const\cf8  \cf7 float\cf8  YAW         = -\cf10 90.0f\cf8 ;
+\f1 \cf0 \
+
+\f0 \cf7 const\cf8  \cf7 float\cf8  PITCH       =  \cf10 0.0f\cf8 ;
+\f1 \cf0 \
+
+\f0 \cf7 const\cf8  \cf7 float\cf8  SPEED       =  \cf10 0.01f\cf8 ; \cf2 //Change for different movement speed.
+\f1 \cf0 \
+
+\f0 \cf7 const\cf8  \cf7 float\cf8  SENSITIVITY =  \cf10 0.08f\cf8 ; \cf2 //Change for different mouse sensitivity
+\f1 \cf0 \
+
+\f0 \cf7 const\cf8  \cf7 float\cf8  ZOOM        =  \cf10 100.0f\cf8 ;
+\f1 \cf0 \
+
+\f0 \cf7 bool\cf8  constrainPitch = \cf7 true\cf8 ;
+\f1 \cf0 \
+\
+\
+
+\f0 \cf2 // An abstract camera class that processes input and calculates the corresponding Euler Angles, Vectors and Matrices for use in OpenGL
+\f1 \cf0 \
+
+\f0 \cf2 //messy class taken from learnopengl.com ... his parameters made no sense, i had to change most of it.
+\f1 \cf0 \
+
+\f0 \cf8     
+\f1 \cf0 \
+
+\f0 \cf8     \cf2 // Constructor with vectors
+\f1 \cf0 \
+\
+
+\f0 \cf9 Camera\cf8 ::Camera(\cf9 glm\cf8 ::\cf9 vec3\cf8  position)
+\f1 \cf0 \
+
+\f0 \cf8     \{
+\f1 \cf0 \
+
+\f0 \cf8         \cf9 Front\cf8  = \cf9 glm\cf8 ::\cf9 vec3\cf8 (\cf10 1.0f\cf8 , \cf10 1.0f\cf8 , \cf10 1.0f\cf8 );
+\f1 \cf0 \
+
+\f0 \cf8         \cf9 glm\cf8 ::\cf9 vec3\cf8  up = \cf9 glm\cf8 ::\cf9 vec3\cf8 (\cf10 0.0f\cf8 , \cf10 1.0f\cf8 , \cf10 0.0f\cf8 );
+\f1 \cf0 \
+
+\f0 \cf8         \cf9 MovementSpeed\cf8  =\cf9 SPEED\cf8  ;
+\f1 \cf0 \
+
+\f0 \cf8         \cf9 MouseSensitivity\cf8  = \cf9 SENSITIVITY\cf8  ;
+\f1 \cf0 \
+
+\f0 \cf8         
+\f1 \cf0 \
+
+\f0 \cf8         \cf9 Position\cf8  = position;
+\f1 \cf0 \
+
+\f0 \cf8         \cf9 WorldUp\cf8  = up;
+\f1 \cf0 \
+
+\f0 \cf8         \cf9 Yaw\cf8  = \cf9 YAW\cf8 ;
+\f1 \cf0 \
+
+\f0 \cf8         \cf9 Pitch\cf8  = \cf9 PITCH\cf8 ;
+\f1 \cf0 \
+
+\f0 \cf8         \cf9 updateCameraVectors\cf8 ();
+\f1 \cf0 \
+
+\f0 \cf8     \}
+\f1 \cf0 \
+
+\f0 \cf8     \cf2 // Constructor with scalar values
+\f1 \cf0 \
+
+\f0 \cf8     \cf9 Camera\cf8 ::Camera(\cf7 float\cf8  posX, \cf7 float\cf8  posY, \cf7 float\cf8  posZ, \cf7 float\cf8  upX, \cf7 float\cf8  upY, \cf7 float\cf8  upZ, \cf7 float\cf8  yaw, \cf7 float\cf8  pitch)
+\f1 \cf0 \
+
+\f0 \cf8     \{
+\f1 \cf0 \
+
+\f0 \cf8         \cf9 Front\cf8  = \cf9 glm\cf8 ::\cf9 vec3\cf8 (\cf10 0.0f\cf8 , \cf10 0.0f\cf8 , \cf10 1.0f\cf8 );
+\f1 \cf0 \
+
+\f0 \cf8         \cf9 MovementSpeed\cf8 = \cf9 SPEED\cf8 ;
+\f1 \cf0 \
+
+\f0 \cf8         \cf9 MouseSensitivity\cf8 =\cf9 SENSITIVITY\cf8 ;
+\f1 \cf0 \
+
+\f0 \cf8         \cf9 Zoom\cf8 =\cf9 ZOOM\cf8 ;
+\f1 \cf0 \
+
+\f0 \cf8         \cf9 Position\cf8  = \cf9 glm\cf8 ::\cf9 vec3\cf8 (posX, posY, posZ);
+\f1 \cf0 \
+
+\f0 \cf8         \cf9 WorldUp\cf8  = \cf9 glm\cf8 ::\cf9 vec3\cf8 (upX, upY, upZ);
+\f1 \cf0 \
+
+\f0 \cf8         \cf9 Yaw\cf8  = yaw;
+\f1 \cf0 \
+
+\f0 \cf8         \cf9 Pitch\cf8  = pitch;
+\f1 \cf0 \
+
+\f0 \cf8         \cf9 updateCameraVectors\cf8 ();
+\f1 \cf0 \
+
+\f0 \cf8     \}
+\f1 \cf0 \
+
+\f0 \cf8     
+\f1 \cf0 \
+
+\f0 \cf8     \cf2 // Returns the view matrix calculated using Euler Angles and the LookAt Matrix
+\f1 \cf0 \
+
+\f0 \cf9 glm\cf8 ::\cf9 mat4\cf8  \cf9 Camera\cf8 ::GetViewMatrix()
+\f1 \cf0 \
+
+\f0 \cf8     \{
+\f1 \cf0 \
+
+\f0 \cf8         \cf7 return\cf8  \cf9 glm\cf8 ::\cf9 lookAt\cf8 (\cf9 Position\cf8 , \cf9 Position\cf8  + \cf9 Front\cf8 , \cf9 Up\cf8 );
+\f1 \cf0 \
+
+\f0 \cf8     \}
+\f1 \cf0 \
+
+\f0 \cf8     
+\f1 \cf0 \
+
+\f0 \cf8     \cf2 // Processes input received from any keyboard-like input system. Accepts input parameter in the form of camera defined ENUM (to abstract it from windowing systems)
+\f1 \cf0 \
+
+\f0 \cf8     \cf7 void\cf8  \cf9 Camera\cf8 ::ProcessKeyboard(\cf9 Camera_Movement\cf8  direction, \cf7 float\cf8  deltaTime)
+\f1 \cf0 \
+
+\f0 \cf8     \{
+\f1 \cf0 \
+
+\f0 \cf8         \cf7 float\cf8  velocity = \cf9 MovementSpeed\cf8  * deltaTime;
+\f1 \cf0 \
+
+\f0 \cf8         \cf7 if\cf8  (direction == \cf9 FORWARD\cf8 )
+\f1 \cf0 \
+
+\f0 \cf8             \cf9 Position\cf8  += \cf9 Front\cf8  * velocity;
+\f1 \cf0 \
+
+\f0 \cf8         \cf7 if\cf8  (direction == \cf9 BACKWARD\cf8 )
+\f1 \cf0 \
+
+\f0 \cf8             \cf9 Position\cf8  -= \cf9 Front\cf8  * velocity;
+\f1 \cf0 \
+
+\f0 \cf8         \cf7 if\cf8  (direction == \cf9 LEFT\cf8 )
+\f1 \cf0 \
+
+\f0 \cf8             \cf9 Position\cf8  -= \cf9 Right\cf8  * velocity;
+\f1 \cf0 \
+
+\f0 \cf8         \cf7 if\cf8  (direction == \cf9 RIGHT\cf8 )
+\f1 \cf0 \
+
+\f0 \cf8             \cf9 Position\cf8  += \cf9 Right\cf8  * velocity;
+\f1 \cf0 \
+
+\f0 \cf8     \}
+\f1 \cf0 \
+
+\f0 \cf8     
+\f1 \cf0 \
+
+\f0 \cf8     \cf2 // Processes input received from a mouse input system. Expects the offset value in both the x and y direction.
+\f1 \cf0 \
+
+\f0 \cf8     \cf7 void\cf8  \cf9 Camera\cf8 ::ProcessMouseMovement(\cf7 float\cf8  xoffset, \cf7 float\cf8  yoffset)
+\f1 \cf0 \
+
+\f0 \cf8     \{
+\f1 \cf0 \
+
+\f0 \cf8         xoffset *= \cf9 MouseSensitivity\cf8 ;
+\f1 \cf0 \
+
+\f0 \cf8         yoffset *= \cf9 MouseSensitivity\cf8 ;
+\f1 \cf0 \
+
+\f0 \cf8         
+\f1 \cf0 \
+
+\f0 \cf8         \cf9 Yaw\cf8    += xoffset;
+\f1 \cf0 \
+
+\f0 \cf8         \cf9 Pitch\cf8  += yoffset;
+\f1 \cf0 \
+
+\f0 \cf8         
+\f1 \cf0 \
+
+\f0 \cf8         \cf2 // Make sure that when pitch is out of bounds, screen doesn't get flipped
+\f1 \cf0 \
+
+\f0 \cf8         \cf7 if\cf8  (\cf9 constrainPitch\cf8 )
+\f1 \cf0 \
+
+\f0 \cf8         \{
+\f1 \cf0 \
+
+\f0 \cf8             \cf7 if\cf8  (\cf9 Pitch\cf8  > \cf10 89.0f\cf8 )
+\f1 \cf0 \
+
+\f0 \cf8                 \cf9 Pitch\cf8  = \cf10 89.0f\cf8 ;
+\f1 \cf0 \
+
+\f0 \cf8             \cf7 if\cf8  (\cf9 Pitch\cf8  < -\cf10 89.0f\cf8 )
+\f1 \cf0 \
+
+\f0 \cf8                 \cf9 Pitch\cf8  = -\cf10 89.0f\cf8 ;
+\f1 \cf0 \
+
+\f0 \cf8         \}
+\f1 \cf0 \
+
+\f0 \cf8         
+\f1 \cf0 \
+
+\f0 \cf8         \cf2 // Update Front, Right and Up Vectors using the updated Euler angles
+\f1 \cf0 \
+
+\f0 \cf8         \cf9 updateCameraVectors\cf8 ();
+\f1 \cf0 \
+
+\f0 \cf8     \}
+\f1 \cf0 \
+
+\f0 \cf8     
+\f1 \cf0 \
+
+\f0 \cf8     \cf2 // Processes input received from a mouse scroll-wheel event. Only requires input on the vertical wheel-axis
+\f1 \cf0 \
+
+\f0 \cf8     \cf7 void\cf8  \cf9 Camera\cf8 ::ProcessMouseScroll(\cf7 float\cf8  yoffset)
+\f1 \cf0 \
+
+\f0 \cf8     \{
+\f1 \cf0 \
+
+\f0 \cf8         \cf7 if\cf8  (\cf9 Zoom\cf8  >= \cf10 1.0f\cf8  && \cf9 Zoom\cf8  <= \cf10 45.0f\cf8 )
+\f1 \cf0 \
+
+\f0 \cf8             \cf9 Zoom\cf8  -= yoffset;
+\f1 \cf0 \
+
+\f0 \cf8         \cf7 if\cf8  (\cf9 Zoom\cf8  <= \cf10 1.0f\cf8 )
+\f1 \cf0 \
+
+\f0 \cf8             \cf9 Zoom\cf8  = \cf10 1.0f\cf8 ;
+\f1 \cf0 \
+
+\f0 \cf8         \cf7 if\cf8  (\cf9 Zoom\cf8  >= \cf10 45.0f\cf8 )
+\f1 \cf0 \
+
+\f0 \cf8             \cf9 Zoom\cf8  = \cf10 45.0f\cf8 ;
+\f1 \cf0 \
+
+\f0 \cf8     \}
+\f1 \cf0 \
+\
+
+\f0 \cf8     
+\f1 \cf0 \
+
+\f0 \cf8     
+\f2 \cf6 /**
+\f1 \cf0 \
+
+\f2 \cf6      Calculates the front vector from the Camera's (updated) Euler Angles. It normalizes and sets the angles and vectors so that
+\f1 \cf0 \
+
+\f2 \cf6         the camera is updated to the current view position and angle.
+\f1 \cf0 \
+
+\f2 \cf6      **/
+\f1 \cf0 \
+
+\f0 \cf8     \cf7 void\cf8  \cf9 Camera\cf8 ::updateCameraVectors()
+\f1 \cf0 \
+
+\f0 \cf8     \{
+\f1 \cf0 \
+
+\f0 \cf8         \cf2 // Calculate the new Front vector
+\f1 \cf0 \
+
+\f0 \cf8         \cf9 glm\cf8 ::\cf9 vec3\cf8  front;
+\f1 \cf0 \
+
+\f0 \cf8         front.x = \cf11 cos\cf8 (\cf9 glm\cf8 ::\cf9 radians\cf8 (\cf9 Yaw\cf8 )) * \cf11 cos\cf8 (\cf9 glm\cf8 ::\cf9 radians\cf8 (\cf9 Pitch\cf8 ));
+\f1 \cf0 \
+
+\f0 \cf8         front.y = \cf11 sin\cf8 (\cf9 glm\cf8 ::\cf9 radians\cf8 (\cf9 Pitch\cf8 ));
+\f1 \cf0 \
+
+\f0 \cf8         front.z = \cf11 sin\cf8 (\cf9 glm\cf8 ::\cf9 radians\cf8 (\cf9 Yaw\cf8 )) * \cf11 cos\cf8 (\cf9 glm\cf8 ::\cf9 radians\cf8 (\cf9 Pitch\cf8 ));
+\f1 \cf0 \
+
+\f0 \cf8         \cf9 Front\cf8  = \cf9 glm\cf8 ::\cf9 normalize\cf8 (front);
+\f1 \cf0 \
+
+\f0 \cf8         \cf2 // Also re-calculate the Right and Up vector
+\f1 \cf0 \
+
+\f0 \cf8         \cf9 Right\cf8  = \cf9 glm\cf8 ::\cf9 normalize\cf8 (\cf9 glm\cf8 ::\cf9 cross\cf8 (\cf9 Front\cf8 , \cf9 WorldUp\cf8 ));  \cf2 // Normalize the vectors, because their length gets closer to 0 the more you look up or down which results in slower movement.
+\f1 \cf0 \
+
+\f0 \cf8         \cf9 Up\cf8     = \cf9 glm\cf8 ::\cf9 normalize\cf8 (\cf9 glm\cf8 ::\cf9 cross\cf8 (\cf9 Right\cf8 , \cf9 Front\cf8 ));
+\f1 \cf0 \
+
+\f0 \cf8     \}
+\f1 \cf0 \
+\
+\
+
+\f0 \cf2 //
+\f1 \cf0 \
+
+\f0 \cf2 //  camera.hpp
+\f1 \cf0 \
+
+\f0 \cf2 //  OpenGL trial
+\f1 \cf0 \
+
+\f0 \cf2 //
+\f1 \cf0 \
+
+\f0 \cf2 //  Created by Rashid on 11/16/18.
+\f1 \cf0 \
+
+\f0 \cf2 //  Copyright \'a9 2018 Rashid. All rights reserved.
+\f1 \cf0 \
+
+\f0 \cf2 //
+\f1 \cf0 \
+\
+
+\f0 \cf4 #ifndef camera_hpp
+\f1 \cf0 \
+
+\f0 \cf4 #define camera_hpp
+\f1 \cf0 \
+\
+
+\f0 \cf4 #include \cf5 <glm.hpp>
+\f1 \cf0 \
+
+\f0 \cf4 #include \cf5 <gtc/matrix_transform.hpp>
+\f1 \cf0 \
+
+\f0 \cf4 #include \cf5 <vector>
+\f1 \cf0 \
+
+\f0 \cf4 #include \cf5 <stdio.h>
+\f1 \cf0 \
+\
+
+\f0 \cf2 // Defines several possible options for camera movement. Used as abstraction to stay away from window-system specific input methods
+\f1 \cf0 \
+\
+\
+
+\f0 \cf7 class\cf8  Camera\{
+\f1 \cf0 \
+
+\f0 \cf8     
+\f1 \cf0 \
+
+\f0 \cf7 public\cf8 :
+\f1 \cf0 \
+
+\f0 \cf8     
+\f1 \cf0 \
+
+\f0 \cf8     \cf9 glm\cf8 ::\cf9 vec3\cf8  Position;
+\f1 \cf0 \
+
+\f0 \cf8     \cf9 glm\cf8 ::\cf9 vec3\cf8  Front;
+\f1 \cf0 \
+
+\f0 \cf8     \cf9 glm\cf8 ::\cf9 vec3\cf8  Up;
+\f1 \cf0 \
+
+\f0 \cf8     \cf9 glm\cf8 ::\cf9 vec3\cf8  Right;
+\f1 \cf0 \
+
+\f0 \cf8     \cf9 glm\cf8 ::\cf9 vec3\cf8  WorldUp;
+\f1 \cf0 \
+
+\f0 \cf8     \cf2 // Euler Angles
+\f1 \cf0 \
+
+\f0 \cf8     \cf7 float\cf8  Yaw;
+\f1 \cf0 \
+
+\f0 \cf8     \cf7 float\cf8  Pitch;
+\f1 \cf0 \
+
+\f0 \cf8     
+\f1 \cf0 \
+
+\f0 \cf8     \cf2 // Camera options
+\f1 \cf0 \
+
+\f0 \cf8     \cf7 float\cf8  MovementSpeed;
+\f1 \cf0 \
+
+\f0 \cf8     \cf7 float\cf8  MouseSensitivity;
+\f1 \cf0 \
+
+\f0 \cf8     \cf7 float\cf8  Zoom;
+\f1 \cf0 \
+
+\f0 \cf8     
+\f1 \cf0 \
+
+\f0 \cf8     \cf2 //Keyboard
+\f1 \cf0 \
+
+\f0 \cf8     \cf7 enum\cf8  Camera_Movement \{
+\f1 \cf0 \
+
+\f0 \cf8         FORWARD,
+\f1 \cf0 \
+
+\f0 \cf8         BACKWARD,
+\f1 \cf0 \
+
+\f0 \cf8         LEFT,
+\f1 \cf0 \
+
+\f0 \cf8         RIGHT
+\f1 \cf0 \
+
+\f0 \cf8     \};
+\f1 \cf0 \
+
+\f0 \cf8     \cf2 //
+\f1 \cf0 \
+
+\f0 \cf8     
+\f1 \cf0 \
+
+\f0 \cf8     Camera(\cf9 glm\cf8 ::\cf9 vec3\cf8  position);
+\f1 \cf0 \
+
+\f0 \cf8     Camera(\cf7 float\cf8  posX, \cf7 float\cf8  posY, \cf7 float\cf8  posZ, \cf7 float\cf8  upX, \cf7 float\cf8  upY, \cf7 float\cf8  upZ, \cf7 float\cf8  yaw, \cf7 float\cf8  pitch);
+\f1 \cf0 \
+
+\f0 \cf8     \cf7 void\cf8  ProcessMouseMovement(\cf7 float\cf8  xoffset, \cf7 float\cf8  yoffset);
+\f1 \cf0 \
+
+\f0 \cf8     \cf7 void\cf8  ProcessMouseScroll(\cf7 float\cf8  yoffset);
+\f1 \cf0 \
+
+\f0 \cf8      \cf7 void\cf8  ProcessKeyboard(\cf9 Camera_Movement\cf8  direction, \cf7 float\cf8  deltaTime);
+\f1 \cf0 \
+
+\f0 \cf8     \cf9 glm\cf8 ::\cf9 mat4\cf8  GetViewMatrix();
+\f1 \cf0 \
+
+\f0 \cf8     
+\f1 \cf0 \
+
+\f0 \cf8     
+\f1 \cf0 \
+
+\f0 \cf7 private\cf8 :
+\f1 \cf0 \
+
+\f0 \cf8     \cf7 void\cf8  updateCameraVectors();
+\f1 \cf0 \
+
+\f0 \cf8 \};
+\f1 \cf0 \
+\
+\
+
+\f0 \cf4 #endif \cf2 /* camera_hpp */
+\f1 \cf0 \
+\
+
+\f0 \cf2 //
+\f1 \cf0 \
+
+\f0 \cf2 //  Skybox.cpp
+\f1 \cf0 \
+
+\f0 \cf2 //  OpenGL trial
+\f1 \cf0 \
+
+\f2 \cf6 /**
+\f1 \cf0 \
+
+\f2 \cf6  This class defines a "skybox", a large texture which is wrapped around the scene, acts like a background for the objects in the scene.
+\f1 \cf0 \
+
+\f2 \cf6     Skybox is a texture with 6 faces which fold into a cube, this will cover the floor, top and sides of the scene.
+\f1 \cf0 \
+\
+
+\f2 \cf6  In the main you always need to LOAD THIS CLASS AFTER ALL OTHER MODELS.
+\f1 \cf0 \
+
+\f2 \cf6     To trick the depthbuffer test, use "glDepthFunc(GL_LEQUAL);" before the implementation.
+\f1 \cf0 \
+
+\f2 \cf6  **/
+\f1 \cf0 \
+
+\f0 \cf2 //  Created by Rashid on 11/28/18.
+\f1 \cf0 \
+
+\f0 \cf2 //  Copyright \'a9 2018 Rashid. All rights reserved.
+\f1 \cf0 \
+
+\f0 \cf2 //
+\f1 \cf0 \
+
+\f0 \cf4 #include \cf5 "Skybox.hpp"
+\f1 \cf0 \
+
+\f0 \cf2 //#define STB_IMAGE_IMPLEMENTATION
+\f1 \cf0 \
+
+\f0 \cf4 #include \cf5 "stb_image.h"
+\f1 \cf0 \
+\
+\
+\
+
+\f0 \cf9 Skybox\cf8 ::Skybox()\{
+\f1 \cf0 \
+\
+
+\f0 \cf8     \cf2 //Defines the measurements of the box.
+\f1 \cf0 \
+
+\f0 \cf8     \cf7 float\cf8  skyboxVertices[]  = \{
+\f1 \cf0 \
+
+\f0 \cf8         \cf2 // positions
+\f1 \cf0 \
+
+\f0 \cf8         -\cf10 1.0f\cf8 ,  \cf10 1.0f\cf8 , -\cf10 1.0f\cf8 ,
+\f1 \cf0 \
+
+\f0 \cf8         -\cf10 1.0f\cf8 , -\cf10 1.0f\cf8 , -\cf10 1.0f\cf8 ,
+\f1 \cf0 \
+
+\f0 \cf8         \cf10 1.0f\cf8 , -\cf10 1.0f\cf8 , -\cf10 1.0f\cf8 ,
+\f1 \cf0 \
+
+\f0 \cf8         \cf10 1.0f\cf8 , -\cf10 1.0f\cf8 , -\cf10 1.0f\cf8 ,
+\f1 \cf0 \
+
+\f0 \cf8         \cf10 1.0f\cf8 ,  \cf10 1.0f\cf8 , -\cf10 1.0f\cf8 ,
+\f1 \cf0 \
+
+\f0 \cf8         -\cf10 1.0f\cf8 ,  \cf10 1.0f\cf8 , -\cf10 1.0f\cf8 ,
+\f1 \cf0 \
+\
+
+\f0 \cf8         -\cf10 1.0f\cf8 , -\cf10 1.0f\cf8 ,  \cf10 1.0f\cf8 ,
+\f1 \cf0 \
+
+\f0 \cf8         -\cf10 1.0f\cf8 , -\cf10 1.0f\cf8 , -\cf10 1.0f\cf8 ,
+\f1 \cf0 \
+
+\f0 \cf8         -\cf10 1.0f\cf8 ,  \cf10 1.0f\cf8 , -\cf10 1.0f\cf8 ,
+\f1 \cf0 \
+
+\f0 \cf8         -\cf10 1.0f\cf8 ,  \cf10 1.0f\cf8 , -\cf10 1.0f\cf8 ,
+\f1 \cf0 \
+
+\f0 \cf8         -\cf10 1.0f\cf8 ,  \cf10 1.0f\cf8 ,  \cf10 1.0f\cf8 ,
+\f1 \cf0 \
+
+\f0 \cf8         -\cf10 1.0f\cf8 , -\cf10 1.0f\cf8 ,  \cf10 1.0f\cf8 ,
+\f1 \cf0 \
+\
+
+\f0 \cf8         \cf10 1.0f\cf8 , -\cf10 1.0f\cf8 , -\cf10 1.0f\cf8 ,
+\f1 \cf0 \
+
+\f0 \cf8         \cf10 1.0f\cf8 , -\cf10 1.0f\cf8 ,  \cf10 1.0f\cf8 ,
+\f1 \cf0 \
+
+\f0 \cf8         \cf10 1.0f\cf8 ,  \cf10 1.0f\cf8 ,  \cf10 1.0f\cf8 ,
+\f1 \cf0 \
+
+\f0 \cf8         \cf10 1.0f\cf8 ,  \cf10 1.0f\cf8 ,  \cf10 1.0f\cf8 ,
+\f1 \cf0 \
+
+\f0 \cf8         \cf10 1.0f\cf8 ,  \cf10 1.0f\cf8 , -\cf10 1.0f\cf8 ,
+\f1 \cf0 \
+
+\f0 \cf8         \cf10 1.0f\cf8 , -\cf10 1.0f\cf8 , -\cf10 1.0f\cf8 ,
+\f1 \cf0 \
+\
+
+\f0 \cf8         -\cf10 1.0f\cf8 , -\cf10 1.0f\cf8 ,  \cf10 1.0f\cf8 ,
+\f1 \cf0 \
+
+\f0 \cf8         -\cf10 1.0f\cf8 ,  \cf10 1.0f\cf8 ,  \cf10 1.0f\cf8 ,
+\f1 \cf0 \
+
+\f0 \cf8         \cf10 1.0f\cf8 ,  \cf10 1.0f\cf8 ,  \cf10 1.0f\cf8 ,
+\f1 \cf0 \
+
+\f0 \cf8         \cf10 1.0f\cf8 ,  \cf10 1.0f\cf8 ,  \cf10 1.0f\cf8 ,
+\f1 \cf0 \
+
+\f0 \cf8         \cf10 1.0f\cf8 , -\cf10 1.0f\cf8 ,  \cf10 1.0f\cf8 ,
+\f1 \cf0 \
+
+\f0 \cf8         -\cf10 1.0f\cf8 , -\cf10 1.0f\cf8 ,  \cf10 1.0f\cf8 ,
+\f1 \cf0 \
+\
+
+\f0 \cf8         -\cf10 1.0f\cf8 ,  \cf10 1.0f\cf8 , -\cf10 1.0f\cf8 ,
+\f1 \cf0 \
+
+\f0 \cf8         \cf10 1.0f\cf8 ,  \cf10 1.0f\cf8 , -\cf10 1.0f\cf8 ,
+\f1 \cf0 \
+
+\f0 \cf8         \cf10 1.0f\cf8 ,  \cf10 1.0f\cf8 ,  \cf10 1.0f\cf8 ,
+\f1 \cf0 \
+
+\f0 \cf8         \cf10 1.0f\cf8 ,  \cf10 1.0f\cf8 ,  \cf10 1.0f\cf8 ,
+\f1 \cf0 \
+
+\f0 \cf8         -\cf10 1.0f\cf8 ,  \cf10 1.0f\cf8 ,  \cf10 1.0f\cf8 ,
+\f1 \cf0 \
+
+\f0 \cf8         -\cf10 1.0f\cf8 ,  \cf10 1.0f\cf8 , -\cf10 1.0f\cf8 ,
+\f1 \cf0 \
+\
+
+\f0 \cf8         -\cf10 1.0f\cf8 , -\cf10 1.0f\cf8 , -\cf10 1.0f\cf8 ,
+\f1 \cf0 \
+
+\f0 \cf8         -\cf10 1.0f\cf8 , -\cf10 1.0f\cf8 ,  \cf10 1.0f\cf8 ,
+\f1 \cf0 \
+
+\f0 \cf8         \cf10 1.0f\cf8 , -\cf10 1.0f\cf8 , -\cf10 1.0f\cf8 ,
+\f1 \cf0 \
+
+\f0 \cf8         \cf10 1.0f\cf8 , -\cf10 1.0f\cf8 , -\cf10 1.0f\cf8 ,
+\f1 \cf0 \
+
+\f0 \cf8         -\cf10 1.0f\cf8 , -\cf10 1.0f\cf8 ,  \cf10 1.0f\cf8 ,
+\f1 \cf0 \
+
+\f0 \cf8         \cf10 1.0f\cf8 , -\cf10 1.0f\cf8 ,  \cf10 1.0f
+\f1 \cf0 \
+
+\f0 \cf8     \};
+\f1 \cf0 \
+\
+
+\f0 \cf8     \cf4 glGenVertexArrays\cf8 (\cf10 1\cf8 , &\cf9 skyboxVAO\cf8 );
+\f1 \cf0 \
+
+\f0 \cf8     \cf4 glGenBuffers\cf8 (\cf10 1\cf8 , &\cf9 skyboxVBO\cf8 );
+\f1 \cf0 \
+
+\f0 \cf8     \cf4 glBindVertexArray\cf8 (\cf9 skyboxVAO\cf8 );
+\f1 \cf0 \
+\
+
+\f0 \cf8     \cf4 glBindBuffer\cf8 (\cf4 GL_ARRAY_BUFFER\cf8 , \cf9 skyboxVBO\cf8 );
+\f1 \cf0 \
+
+\f0 \cf8     \cf4 glBufferData\cf8 (\cf4 GL_ARRAY_BUFFER\cf8 , \cf7 sizeof\cf8 (skyboxVertices), &skyboxVertices, \cf4 GL_STATIC_DRAW\cf8 );
+\f1 \cf0 \
+\
+
+\f0 \cf8     \cf4 glEnableVertexAttribArray\cf8 (\cf10 0\cf8 );
+\f1 \cf0 \
+
+\f0 \cf8     \cf4 glVertexAttribPointer\cf8 (\cf10 0\cf8 , \cf10 3\cf8 , \cf4 GL_FLOAT\cf8 , \cf4 GL_FALSE\cf8 , \cf10 3\cf8  * \cf7 sizeof\cf8 (\cf7 float\cf8 ), (\cf7 void\cf8 *)\cf10 0\cf8 );
+\f1 \cf0 \
+\
+
+\f0 \cf8     \cf4 glBindVertexArray\cf8 (\cf10 0\cf8 );
+\f1 \cf0 \
+\
+
+\f0 \cf8     \cf9 loadSkybox\cf8 ();
+\f1 \cf0 \
+
+\f0 \cf8 \}
+\f1 \cf0 \
+\
+
+\f0 \cf7 void\cf8  \cf9 Skybox\cf8 ::Draw()\{
+\f1 \cf0 \
+\
+
+\f0 \cf8     \cf4 glBindVertexArray\cf8 (\cf9 skyboxVAO\cf8 );
+\f1 \cf0 \
+
+\f0 \cf8     \cf9 glBindTexture\cf8 (\cf4 GL_TEXTURE_CUBE_MAP\cf8 , \cf9 cubemapTexture\cf8 );
+\f1 \cf0 \
+
+\f0 \cf8     \cf9 glDrawArrays\cf8 (\cf4 GL_TRIANGLES\cf8 , \cf10 0\cf8 , \cf10 36\cf8 );
+\f1 \cf0 \
+
+\f0 \cf8 \}
+\f1 \cf0 \
+\
+
+\f0 \cf2 //private method to get the images from location using the STBI implementation.
+\f1 \cf0 \
+
+\f0 \cf9 GLuint\cf8  \cf9 Skybox\cf8 ::loadSkybox()\{
+\f1 \cf0 \
+
+\f0 \cf8     \cf9 glGenTextures\cf8 (\cf10 1\cf8 , &\cf9 cubemapTexture\cf8 );
+\f1 \cf0 \
+
+\f0 \cf8     \cf9 glBindTexture\cf8 (\cf4 GL_TEXTURE_CUBE_MAP\cf8 , \cf9 cubemapTexture\cf8 );
+\f1 \cf0 \
+\
+
+\f0 \cf8     \cf7 int\cf8  width, height, nrComponents;
+\f1 \cf0 \
+
+\f0 \cf8     \cf7 for\cf8  (\cf7 unsigned\cf8  \cf7 int\cf8  i = \cf10 0\cf8 ; i < \cf9 faces\cf8 .\cf11 size\cf8 (); i++)
+\f1 \cf0 \
+
+\f0 \cf8     \{
+\f1 \cf0 \
+
+\f0 \cf8         \cf7 unsigned\cf8  \cf7 char\cf8  *data = \cf9 stbi_load\cf8 (\cf9 faces\cf8 [\cf11 i\cf8 ].\cf11 c_str\cf8 (), &width, &height, &nrComponents, \cf10 0\cf8 );
+\f1 \cf0 \
+
+\f0 \cf8         \cf7 if\cf8  (data)
+\f1 \cf0 \
+
+\f0 \cf8         \{
+\f1 \cf0 \
+
+\f0 \cf8             \cf9 glTexImage2D\cf8 (\cf4 GL_TEXTURE_CUBE_MAP_POSITIVE_X\cf8  + i, \cf10 0\cf8 , \cf4 GL_RGB\cf8 , width, height, \cf10 0\cf8 , \cf4 GL_RGB\cf8 , \cf4 GL_UNSIGNED_BYTE\cf8 , data);
+\f1 \cf0 \
+
+\f0 \cf8             \cf9 stbi_image_free\cf8 (data);
+\f1 \cf0 \
+
+\f0 \cf8         \}
+\f1 \cf0 \
+
+\f0 \cf8         \cf7 else
+\f1 \cf0 \
+
+\f0 \cf8         \{
+\f1 \cf0 \
+
+\f0 \cf8             \cf11 std\cf8 ::\cf11 cout\cf8  << \cf5 "Cubemap texture failed to load at path: "\cf8  << \cf9 faces\cf8 [\cf11 i\cf8 ] << \cf11 std\cf8 ::\cf11 endl\cf8 ;
+\f1 \cf0 \
+
+\f0 \cf8             \cf9 stbi_image_free\cf8 (data);
+\f1 \cf0 \
+
+\f0 \cf8         \}
+\f1 \cf0 \
+
+\f0 \cf8     \}
+\f1 \cf0 \
+
+\f0 \cf8     \cf9 glTexParameteri\cf8 (\cf4 GL_TEXTURE_CUBE_MAP\cf8 , \cf4 GL_TEXTURE_MIN_FILTER\cf8 , \cf4 GL_LINEAR\cf8 );
+\f1 \cf0 \
+
+\f0 \cf8     \cf9 glTexParameteri\cf8 (\cf4 GL_TEXTURE_CUBE_MAP\cf8 , \cf4 GL_TEXTURE_MAG_FILTER\cf8 , \cf4 GL_LINEAR\cf8 );
+\f1 \cf0 \
+
+\f0 \cf8     \cf9 glTexParameteri\cf8 (\cf4 GL_TEXTURE_CUBE_MAP\cf8 , \cf4 GL_TEXTURE_WRAP_S\cf8 , \cf4 GL_CLAMP_TO_EDGE\cf8 );
+\f1 \cf0 \
+
+\f0 \cf8     \cf9 glTexParameteri\cf8 (\cf4 GL_TEXTURE_CUBE_MAP\cf8 , \cf4 GL_TEXTURE_WRAP_T\cf8 , \cf4 GL_CLAMP_TO_EDGE\cf8 );
+\f1 \cf0 \
+
+\f0 \cf8     \cf9 glTexParameteri\cf8 (\cf4 GL_TEXTURE_CUBE_MAP\cf8 , \cf4 GL_TEXTURE_WRAP_R\cf8 , \cf4 GL_CLAMP_TO_EDGE\cf8 );
+\f1 \cf0 \
+
+\f0 \cf8     
+\f1 \cf0 \
+
+\f0 \cf8     \cf9 glBindTexture\cf8 (\cf4 GL_TEXTURE_CUBE_MAP\cf8 , \cf10 0\cf8 );
+\f1 \cf0 \
+
+\f0 \cf8     
+\f1 \cf0 \
+
+\f0 \cf8     \cf7 return\cf8  \cf9 cubemapTexture\cf8 ;
+\f1 \cf0 \
+
+\f0 \cf8 \}
+\f1 \cf0 \
+\
+\
+
+\f0 \cf9 GLuint\cf8  \cf9 Skybox\cf8 ::getTexID()\{
+\f1 \cf0 \
+\
+
+\f0 \cf8     \cf7 return\cf8  \cf9 cubemapTexture\cf8 ;
+\f1 \cf0 \
+
+\f0 \cf8 \}
+\f1 \cf0 \
+\
+
+\f0 \cf2 //
+\f1 \cf0 \
+
+\f0 \cf2 //  Skybox.hpp
+\f1 \cf0 \
+
+\f0 \cf2 //  OpenGL trial
+\f1 \cf0 \
+
+\f0 \cf2 //
+\f1 \cf0 \
+
+\f0 \cf2 //  Created by Rashid on 11/28/18.
+\f1 \cf0 \
+
+\f0 \cf2 //  Copyright \'a9 2018 Rashid. All rights reserved.
+\f1 \cf0 \
+
+\f0 \cf2 //
+\f1 \cf0 \
+\
+
+\f0 \cf4 #ifndef Skybox_hpp
+\f1 \cf0 \
+
+\f0 \cf4 #define Skybox_hpp
+\f1 \cf0 \
+\
+
+\f0 \cf4 #include \cf5 <stdio.h>
+\f1 \cf0 \
+
+\f0 \cf4 #include \cf5 <glm.hpp>
+\f1 \cf0 \
+
+\f0 \cf4 #include \cf5 <string>
+\f1 \cf0 \
+
+\f0 \cf4 #include \cf5 <fstream>
+\f1 \cf0 \
+
+\f0 \cf4 #include \cf5 <sstream>
+\f1 \cf0 \
+
+\f0 \cf4 #include \cf5 <iostream>
+\f1 \cf0 \
+
+\f0 \cf4 #include \cf5 <map>
+\f1 \cf0 \
+
+\f0 \cf4 #include \cf5 <vector>
+\f1 \cf0 \
+
+\f0 \cf4 #include \cf5 <stdio.h>
+\f1 \cf0 \
+
+\f0 \cf4 #include \cf5 <GL/glew.h>
+\f1 \cf0 \
+\
+
+\f0 \cf7 class\cf8  Skybox\{
+\f1 \cf0 \
+\
+
+\f0 \cf7 public\cf8 :
+\f1 \cf0 \
+
+\f0 \cf8     Skybox(); \cf2 //constructor
+\f1 \cf0 \
+
+\f0 \cf8         \cf7 void\cf8  Draw();
+\f1 \cf0 \
+
+\f0 \cf8         \cf9 GLuint\cf8  getTexID();
+\f1 \cf0 \
+
+\f0 \cf8         \cf11 std\cf8 ::\cf11 vector\cf8 <\cf11 std\cf8 ::\cf11 string\cf8 > getFaces();
+\f1 \cf0 \
+
+\f0 \cf8     
+\f1 \cf0 \
+
+\f0 \cf7 private\cf8 :
+\f1 \cf0 \
+
+\f0 \cf8     
+\f1 \cf0 \
+
+\f0 \cf9 GLuint\cf8  loadSkybox(); \cf2 //Method to load the textures from storage.
+\f1 \cf0 \
+
+\f0 \cf8         \cf9 GLuint\cf8  skyboxVAO;
+\f1 \cf0 \
+
+\f0 \cf8         \cf9 GLuint\cf8  skyboxVBO;
+\f1 \cf0 \
+
+\f0 \cf8         \cf9 GLuint\cf8  cubemapTexture;
+\f1 \cf0 \
+
+\f0 \cf8     
+\f1 \cf0 \
+
+\f0 \cf8     \cf11 std\cf8 ::\cf11 vector\cf8 <\cf11 std\cf8 ::\cf11 string\cf8 > faces
+\f1 \cf0 \
+
+\f0 \cf8     \{
+\f1 \cf0 \
+
+\f0 \cf8         \cf5 "/Users/rashid/Desktop/rash/1WORKSPACE/Uni/Graphics/Res/Skybox/right.jpg"\cf8 ,
+\f1 \cf0 \
+
+\f0 \cf8         \cf5 "/Users/rashid/Desktop/rash/1WORKSPACE/Uni/Graphics/Res/Skybox/left.jpg"\cf8 ,
+\f1 \cf0 \
+
+\f0 \cf8         \cf5 "/Users/rashid/Desktop/rash/1WORKSPACE/Uni/Graphics/Res/Skybox/up.jpg"\cf8 , \cf2 //roof
+\f1 \cf0 \
+
+\f0 \cf8         \cf5 "/Users/rashid/Desktop/rash/1WORKSPACE/Uni/Graphics/Res/Skybox/down.jpg"\cf8 , \cf2 //floor
+\f1 \cf0 \
+
+\f0 \cf8         \cf5 "/Users/rashid/Desktop/rash/1WORKSPACE/Uni/Graphics/Res/Skybox/front.jpg"\cf8 ,
+\f1 \cf0 \
+
+\f0 \cf8         \cf5 "/Users/rashid/Desktop/rash/1WORKSPACE/Uni/Graphics/Res/Skybox/back.jpg"
+\f1 \cf0 \
+
+\f0 \cf8     \};
+\f1 \cf0 \
+
+\f0 \cf8 \};
+\f1 \cf0 \
+
+\f0 \cf4 #endif \cf2 /* Skybox_hpp */
+\f1 \cf0 \
+\
+\
+
+\f0 \cf4 #version \cf10 410\cf4  core
+\f1 \cf0 \
+\
+
+\f0 \cf7 layout\cf8 (location = \cf10 0\cf8 ) \cf7 in\cf8  \cf7 vec4\cf8  position; \cf2 //location 0, set in the "SHADER.CPP" //USED TO BE VEC3
+\f1 \cf0 \
+
+\f0 \cf7 layout\cf8 (location = \cf10 1\cf8 ) \cf7 in\cf8  \cf7 vec4\cf8  normal; \cf2 //THIS WAS SET IN THE "SHADER.CPP" FILE. location 1
+\f1 \cf0 \
+
+\f0 \cf7 layout\cf8 (location = \cf10 2\cf8 ) \cf7 in\cf8  \cf7 vec2\cf8  texCoord; \cf2 //set in the "shader.cpp"
+\f1 \cf0 \
+\
+
+\f0 \cf7 uniform\cf8  \cf7 mat4\cf8  projection;
+\f1 \cf0 \
+
+\f0 \cf7 uniform\cf8  \cf7 mat4\cf8  view;
+\f1 \cf0 \
+
+\f0 \cf7 uniform\cf8  \cf7 mat4\cf8  model;
+\f1 \cf0 \
+\
+
+\f0 \cf7 uniform\cf8  \cf7 mat4\cf8  MVP;
+\f1 \cf0 \
+\
+
+\f0 \cf2 //variables to send out to the fragment
+\f1 \cf0 \
+
+\f0 \cf7 out\cf8  \cf7 vec2\cf8  texCoord0;
+\f1 \cf0 \
+
+\f0 \cf7 out\cf8  \cf7 vec4\cf8  normal0;
+\f1 \cf0 \
+
+\f0 \cf7 out\cf8  \cf7 vec4\cf8  FragPos;
+\f1 \cf0 \
+\
+
+\f0 \cf7 void\cf8  main()\{
+\f1 \cf0 \
+\
+
+\f0 \cf2 /*
+\f1 \cf0 \
+
+\f0 \cf2  For normal vector we dont need to know the transformations of the object right now, so we use mat3(transpose(model)) to get the 3x3 matrix of the model
+\f1 \cf0 \
+
+\f0 \cf2     we want the 3x3 not 4x4 because 3x3 has no informations on the transformations.
+\f1 \cf0 \
+
+\f0 \cf2  
+\f1 \cf0 \
+
+\f0 \cf2  This is some fancy sh!T:
+\f1 \cf0 \
+
+\f0 \cf2  */
+\f1 \cf0 \
+
+\f0 \cf8     \cf7 vec3\cf8  normalT = \cf7 mat3\cf8 (\cf11 transpose\cf8 (\cf11 inverse\cf8 (model))) * \cf7 vec3\cf8 (normal.xyz); \cf2 //Scale the normal with the model correctly corralating to world space
+\f1 \cf0 \
+
+\f0 \cf8     
+\f1 \cf0 \
+
+\f0 \cf8     
+\f1 \cf0 \
+
+\f0 \cf8     FragPos = model * position; \cf2 //send this fragment's position to the fragment shader
+\f1 \cf0 \
+
+\f0 \cf8     normal0 = \cf7 vec4\cf8 (normalT,\cf10 1.0\cf8 ); \cf2 //send the normal coordinates to the fragment shader
+\f1 \cf0 \
+
+\f0 \cf8     texCoord0 = texCoord;
+\f1 \cf0 \
+
+\f0 \cf8     \cf11 gl_Position\cf8  = projection * view * model * FragPos; \cf2 //used to be *vec4(position,1.0);
+\f1 \cf0 \
+\
+
+\f0 \cf8 \}
+\f1 \cf0 \
+\
+
+\f0 \cf4 #version \cf10 410\cf4  core
+\f1 \cf0 \
+
+\f0 \cf4 #define NUM_LIGHTS \cf10 4
+\f1 \cf0 \
+\
+
+\f0 \cf7 out\cf8  \cf7 vec4\cf8  frag; \cf2 //send the output back to the program.
+\f1 \cf0 \
+\
+
+\f0 \cf7 in\cf8  \cf7 vec2\cf8  texCoord0;
+\f1 \cf0 \
+
+\f0 \cf7 in\cf8  \cf7 vec4\cf8  normal0; \cf2 //normal should be vec 4
+\f1 \cf0 \
+
+\f0 \cf7 in\cf8  \cf7 vec4\cf8  FragPos; \cf2 //Catching the fragment from the Vertex shader, now we can calculate this fragment's position. VEC3 OR VEC4?
+\f1 \cf0 \
+\
+
+\f0 \cf7 uniform\cf8  \cf7 sampler2D\cf8  myTexture; \cf2 //sampler to map texture to obj
+\f1 \cf0 \
+\
+
+\f0 \cf7 uniform\cf8  \cf7 vec4\cf8  lightPos; \cf2 //the position of the light source is defined in the main program, we can get it here because it is a global var.
+\f1 \cf0 \
+
+\f0 \cf7 uniform\cf8  \cf7 vec4\cf8  lightPosD; \cf2 //the position of the light source is defined in the main program, we can get it here because it is a global var.
+\f1 \cf0 \
+\
+
+\f0 \cf7 uniform\cf8  \cf7 vec4\cf8  viewPos; \cf2 //camera
+\f1 \cf0 \
+
+\f0 \cf2 //
+\f1 \cf0 \
+
+\f0 \cf2 //uniform vec4 ia;        // Ambient colour
+\f1 \cf0 \
+
+\f0 \cf2 //uniform float ka;        // Ambient constant (strength)
+\f1 \cf0 \
+
+\f0 \cf2 //uniform float kd;        // Diffuse constant
+\f1 \cf0 \
+
+\f0 \cf2 //uniform vec4 id;        //diffuse colour
+\f1 \cf0 \
+
+\f0 \cf2 //uniform vec4 is;        // specular colour
+\f1 \cf0 \
+
+\f0 \cf2 //uniform float ks;        // specular constant
+\f1 \cf0 \
+
+\f0 \cf2 //uniform float shininess;// shininess constant
+\f1 \cf0 \
+\
+
+\f0 \cf2 //uniform vec4 strD; //strength vector for material diffuse
+\f1 \cf0 \
+
+\f0 \cf2 //uniform vec4 strS; //Strength vector for material specular
+\f1 \cf0 \
+\
+
+\f0 \cf2 //When multiplying these strength vectors, use ".XYZ" to only get 3 points, because we cant calculate vec4*vec3//
+\f1 \cf0 \
+
+\f0 \cf7 struct\cf8  Material \{
+\f1 \cf0 \
+
+\f0 \cf8     
+\f1 \cf0 \
+
+\f0 \cf8     \cf7 vec3\cf8  ia; \cf2 //ambient RGB for MATERIAL
+\f1 \cf0 \
+
+\f0 \cf8     \cf7 vec3\cf8  id; \cf2 //diffuse RGB for MATERIAL
+\f1 \cf0 \
+
+\f0 \cf8     \cf7 vec3\cf8  is; \cf2 // specular RGB for MATERIAL
+\f1 \cf0 \
+
+\f0 \cf8     
+\f1 \cf0 \
+
+\f0 \cf8     \cf7 float\cf8  shininess;
+\f1 \cf0 \
+
+\f0 \cf8     
+\f1 \cf0 \
+
+\f0 \cf8     \cf7 sampler2D\cf8  diffuseMap; \cf2 //later
+\f1 \cf0 \
+
+\f0 \cf8     \cf7 sampler2D\cf8  specularMap; \cf2 //later
+\f1 \cf0 \
+
+\f0 \cf8     \cf7 sampler2D\cf8  reflectMap;   \cf2 //LAAAATER
+\f1 \cf0 \
+
+\f0 \cf8 \};
+\f1 \cf0 \
+\
+
+\f0 \cf7 struct\cf8  DirLight\{
+\f1 \cf0 \
+
+\f0 \cf8     \cf7 vec4\cf8  lightPos; \cf2 //Direction
+\f1 \cf0 \
+\
+
+\f0 \cf8     \cf7 float\cf8  ka; \cf2 // aimbient LIGHT intensity..
+\f1 \cf0 \
+
+\f0 \cf8     \cf7 float\cf8  kd; \cf2 //diffuse intensity
+\f1 \cf0 \
+
+\f0 \cf8     \cf7 float\cf8  ks;\cf2 //specular intensity
+\f1 \cf0 \
+
+\f0 \cf8 \};
+\f1 \cf0 \
+\
+
+\f0 \cf7 struct\cf8  PointLight\{
+\f1 \cf0 \
+\
+
+\f0 \cf8     \cf7 vec4\cf8  position;
+\f1 \cf0 \
+
+\f0 \cf8     \cf7 vec3\cf8  colour; \cf2 //the colour of PLight in RGB.
+\f1 \cf0 \
+
+\f0 \cf8     
+\f1 \cf0 \
+
+\f0 \cf8     \cf7 float\cf8  constant;
+\f1 \cf0 \
+
+\f0 \cf8     \cf7 float\cf8  linear;
+\f1 \cf0 \
+
+\f0 \cf8     \cf7 float\cf8  quadratic;
+\f1 \cf0 \
+
+\f0 \cf8         
+\f1 \cf0 \
+
+\f0 \cf8     \cf7 vec3\cf8  ia;
+\f1 \cf0 \
+
+\f0 \cf8     \cf7 vec3\cf8  id;
+\f1 \cf0 \
+
+\f0 \cf8     \cf7 vec3\cf8  is;
+\f1 \cf0 \
+
+\f0 \cf8 \};
+\f1 \cf0 \
+\
+
+\f0 \cf7 uniform\cf8  Material material;
+\f1 \cf0 \
+
+\f0 \cf7 uniform\cf8  DirLight sun;
+\f1 \cf0 \
+
+\f0 \cf7 uniform\cf8  PointLight pLight;
+\f1 \cf0 \
+\
+
+\f0 \cf7 vec3\cf8  TheSun(DirLight light);
+\f1 \cf0 \
+
+\f0 \cf7 vec3\cf8  Lamp(PointLight plight, \cf7 vec4\cf8  FragPos);
+\f1 \cf0 \
+\
+
+\f0 \cf7 void\cf8  main()\{
+\f1 \cf0 \
+
+\f0 \cf8     
+\f1 \cf0 \
+
+\f0 \cf8     \cf7 vec3\cf8  sun = TheSun(sun);
+\f1 \cf0 \
+
+\f0 \cf8     \cf7 vec3\cf8  point = Lamp(pLight, FragPos);
+\f1 \cf0 \
+
+\f0 \cf8     
+\f1 \cf0 \
+
+\f0 \cf8     
+\f1 \cf0 \
+
+\f0 \cf8     frag = \cf7 vec4\cf8 (sun+point,\cf10 1.0\cf8 )*\cf11 texture\cf8 (myTexture,texCoord0);
+\f1 \cf0 \
+
+\f0 \cf8 \}
+\f1 \cf0 \
+\
+
+\f0 \cf2 //calculate the colour of this fragment using the sun's colour for a piece of the calculation.
+\f1 \cf0 \
+
+\f0 \cf7 vec3\cf8  TheSun(DirLight sun)\{
+\f1 \cf0 \
+
+\f0 \cf8     
+\f1 \cf0 \
+
+\f0 \cf8     \cf7 vec3\cf8  ambient = sun.ka * material.ia.rgb; \cf2 //diffuse colour * ambient colour * ambient constant
+\f1 \cf0 \
+
+\f0 \cf8     
+\f1 \cf0 \
+
+\f0 \cf8     \cf2 //diffuse, we only care about light direction.
+\f1 \cf0 \
+
+\f0 \cf8     \cf7 vec4\cf8  lightDir = \cf11 normalize\cf8 (-sun.lightPos); \cf2 //normalize returns a vector with the same direction as its parameter, v, but with length 1.
+\f1 \cf0 \
+
+\f0 \cf8     \cf7 float\cf8  diff = \cf11 max\cf8 (\cf11 dot\cf8 (\cf11 normalize\cf8 (normal0), lightDir), \cf10 0.0\cf8 );
+\f1 \cf0 \
+
+\f0 \cf8     \cf7 vec3\cf8  diffuse = diff * material.id.rgb *sun.kd; \cf2 //diff * diffuse colour * strength
+\f1 \cf0 \
+
+\f0 \cf8     
+\f1 \cf0 \
+
+\f0 \cf8     \cf2 // Specular
+\f1 \cf0 \
+
+\f0 \cf8     \cf7 vec4\cf8  viewDir = \cf11 normalize\cf8 (viewPos - FragPos); \cf2 //vector with direction towards object. ViewPos is the camera matrix transposed
+\f1 \cf0 \
+
+\f0 \cf8     \cf7 vec4\cf8  reflectDir = \cf11 reflect\cf8 (-lightDir, \cf11 normalize\cf8 (normal0)); \cf2 //vector directed towards eyes.
+\f1 \cf0 \
+
+\f0 \cf8     \cf7 float\cf8  spec = \cf11 pow\cf8 (\cf11 max\cf8 (\cf11 dot\cf8 (viewDir, reflectDir), \cf10 0.0\cf8 ), material.shininess); \cf2 //calculate dot product of both
+\f1 \cf0 \
+
+\f0 \cf8     \cf7 vec3\cf8  specV = sun.ks* material.is.rgb *spec;
+\f1 \cf0 \
+
+\f0 \cf8     
+\f1 \cf0 \
+
+\f0 \cf8     \cf7 vec3\cf8  sunFragment = (ambient + diffuse + specV);
+\f1 \cf0 \
+
+\f0 \cf8     
+\f1 \cf0 \
+
+\f0 \cf8     \cf7 return\cf8  sunFragment;
+\f1 \cf0 \
+
+\f0 \cf8 \}
+\f1 \cf0 \
+\
+
+\f0 \cf7 vec3\cf8  Lamp(PointLight plight, \cf7 vec4\cf8  fragPos)\{
+\f1 \cf0 \
+
+\f0 \cf8     
+\f1 \cf0 \
+
+\f0 \cf8     \cf7 vec4\cf8  viewDir = \cf11 normalize\cf8 (viewPos - fragPos);
+\f1 \cf0 \
+
+\f0 \cf8     
+\f1 \cf0 \
+
+\f0 \cf8     \cf7 vec4\cf8  lightDir = \cf11 normalize\cf8 (plight.position - fragPos); \cf2 //plight.position is not -plight because we calculate from the object to the light
+\f1 \cf0 \
+
+\f0 \cf8     \cf2 // diffuse shading
+\f1 \cf0 \
+
+\f0 \cf8     \cf7 float\cf8  diff = \cf11 max\cf8 (\cf11 dot\cf8 (\cf11 normalize\cf8 (normal0), lightDir), \cf10 0.0\cf8 );
+\f1 \cf0 \
+
+\f0 \cf8     \cf2 // specular shading
+\f1 \cf0 \
+
+\f0 \cf8     \cf7 vec4\cf8  reflectDir = \cf11 reflect\cf8 (-lightDir, \cf11 normalize\cf8 (normal0));
+\f1 \cf0 \
+
+\f0 \cf8     \cf7 float\cf8  spec = \cf11 pow\cf8 (\cf11 max\cf8 (\cf11 dot\cf8 (viewDir, reflectDir), \cf10 0.0\cf8 ), material.shininess);
+\f1 \cf0 \
+
+\f0 \cf8     \cf2 // attenuation
+\f1 \cf0 \
+
+\f0 \cf8     \cf7 float\cf8  \cf11 distance\cf8  = \cf11 length\cf8 (plight.position - fragPos);
+\f1 \cf0 \
+
+\f0 \cf8     \cf7 float\cf8  attenuation = \cf10 1.0\cf8  / (plight.constant + plight.linear * \cf11 distance\cf8  + plight.quadratic * (\cf11 distance\cf8  * \cf11 distance\cf8 ));
+\f1 \cf0 \
+
+\f0 \cf8     \cf2 // combine results
+\f1 \cf0 \
+
+\f0 \cf8     \cf7 vec3\cf8  ambient = plight.ia.rgb * material.ia.rgb;
+\f1 \cf0 \
+
+\f0 \cf8     \cf7 vec3\cf8  diffuse = plight.id.rgb * diff * material.id.rgb;
+\f1 \cf0 \
+
+\f0 \cf8     \cf7 vec3\cf8  specular = plight.is.rgb * spec * material.is.rgb;
+\f1 \cf0 \
+
+\f0 \cf8     ambient *= attenuation;
+\f1 \cf0 \
+
+\f0 \cf8     diffuse *= attenuation;
+\f1 \cf0 \
+
+\f0 \cf8     specular *= attenuation;
+\f1 \cf0 \
+
+\f0 \cf8     
+\f1 \cf0 \
+
+\f0 \cf8     \cf7 vec3\cf8  lamp = (ambient + diffuse + specular);
+\f1 \cf0 \
+
+\f0 \cf8     \cf7 return\cf8  lamp;
+\f1 \cf0 \
+
+\f0 \cf8 \}
+\f1 \cf0 \
+\
+
+\f0 \cf2 //ambient   +      d i f f u s e        +   s p e c u l a r        *    t e x t u r e
+\f1 \cf0 \
+
+\f0 \cf2 //frag = vec4(ka * ia.rgb + kd * id.rgb * diffuse.rgb + ks * is.rgb * spec, 1.0) * texture(myTexture,texCoord0); //professor's code
+\f1 \cf0 \
+\
+\
+
+\f0 \cf2 /*
+\f1 \cf0 \
+
+\f0 \cf2  Directional light is calculated by taking the inverse of the LIGHTPOS, therefore we can do calculations of how the light travels FROM
+\f1 \cf0 \
+
+\f0 \cf2  the source TO the object, instead of calculating FROM the object TO the Light source.
+\f1 \cf0 \
+
+\f0 \cf2  
+\f1 \cf0 \
+
+\f0 \cf2  calcDirLight()\{
+\f1 \cf0 \
+
+\f0 \cf2  vec3 ambient = light.ka * material.ia.rgb;
+\f1 \cf0 \
+
+\f0 \cf2  vec4 lightDir = normalize(-light.lightPos); //normalize returns a vector with the same direction as its parameter, v, but with length 1.
+\f1 \cf0 \
+
+\f0 \cf2  float diff = max(dot(normalize(normal0), lightDir), 0.0);
+\f1 \cf0 \
+
+\f0 \cf2  vec3 diffuse = diff * material.id.rgb *strD.xyz; //diff * diffuse colour * strength
+\f1 \cf0 \
+
+\f0 \cf2 \}
+\f1 \cf0 \
+
+\f0 \cf2  */\
+\
+\cf4 #version \cf10 410\cf4  core
+\f1 \cf0 \
+\
+
+\f0 \cf7 layout\cf8 (location = \cf10 0\cf8 ) \cf7 in\cf8  \cf7 vec3\cf8  position;
+\f1 \cf0 \
+\
+
+\f0 \cf7 uniform\cf8  \cf7 mat4\cf8  projection;
+\f1 \cf0 \
+
+\f0 \cf7 uniform\cf8  \cf7 mat4\cf8  view;
+\f1 \cf0 \
+
+\f0 \cf7 uniform\cf8  \cf7 mat4\cf8  model;
+\f1 \cf0 \
+\
+
+\f0 \cf7 uniform\cf8  \cf7 mat4\cf8  MVP;
+\f1 \cf0 \
+\
+
+\f0 \cf7 void\cf8  main()\{
+\f1 \cf0 \
+
+\f0 \cf8     
+\f1 \cf0 \
+
+\f0 \cf8     \cf11 gl_Position\cf8  = projection * view * model * \cf7 vec4\cf8 (position, \cf10 1.0f\cf8 );
+\f1 \cf0 \
+
+\f0 \cf8 \}
+\f1 \cf0 \
+\
+\
+
+\f0 \cf4 #version \cf10 410\cf4  core
+\f1 \cf0 \
+\
+
+\f0 \cf7 out\cf8  \cf7 vec4\cf8  frag;
+\f1 \cf0 \
+\
+
+\f0 \cf7 void\cf8  main()\{
+\f1 \cf0 \
+
+\f0 \cf8     frag = \cf7 vec4\cf8 (\cf10 1.0\cf8 );
+\f1 \cf0 \
+
+\f0 \cf8 \}
+\f1 \cf0 \
+\
+}
